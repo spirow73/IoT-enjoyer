@@ -1,4 +1,19 @@
 services:
+  # Servicio de Node-RED
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    environment:
+      - TZ=Europe/Madrid
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node-red/data:/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Servicio de usuarios
   user-service:
     build:
       context: ./user-service
@@ -7,11 +22,13 @@ services:
       - "3001:3000"
     volumes:
       - ./user-service:/app
-      - /app/node_modules
+      - /app/node_modules  # Importante: Comenté este volumen
     networks:
       - app-network
     command: npm run dev
+    restart: unless-stopped
 
+  # Servicio de máquinas
   machine-service:
     build:
       context: ./machine-service
@@ -20,10 +37,12 @@ services:
       - "3002:3000"
     volumes:
       - ./machine-service:/app
-      - /app/node_modules
+      - /app/node_modules # Importante: Comenté este volumen
     networks:
       - app-network
     command: npm run dev
+    restart: unless-stopped
+
 networks:
   app-network:
     driver: bridge
