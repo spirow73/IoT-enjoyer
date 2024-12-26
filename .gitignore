@@ -1,0 +1,30 @@
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.bak
+*.lock
+
+# Dependency folders
+node_modules/
+analytics-service/node_modules/
+machine-service/node_modules/
+node-red/data/node_modules/
+node-red/data/.npm
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Package manager specific files
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+
+# IDE files
+.idea/
+*.vscode/
+*.vs/
+
+# Other files you may wish to not track (e.g. configuration with credentials)
+config.local.json
