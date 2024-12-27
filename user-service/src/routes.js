@@ -6,7 +6,7 @@ const router = express.Router();
 const users = [
     { id: 1, rfid: "rfid123", name: "Usuario 1" },
     { id: 2, rfid: "rfid456", name: "Usuario 2" },
-    { id: 3, rfid: "rfid789", name: "Usuario Nodemon" },
+    { id: 3, rfid: "rfid789", name: "Usuario" },
 ];
 
 // Endpoint para obtener todos los usuarios

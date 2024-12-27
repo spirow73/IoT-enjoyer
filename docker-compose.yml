@@ -37,12 +37,50 @@ services:
     ports:
       - "3002:3000"
     volumes:
-      - ./machine-service:/app  # AQUI ESTÁ EL CAMBIO. Mapeamos la carpeta de tu equipo con la app del contenedor.
+      - ./machine-service:/usr/src/app
     networks:
       - app-network
     command: npm run dev
     restart: unless-stopped
 
+  # Servicio de base de datos y API
+  data-storage-service:
+    build:
+      context: ./data-storage-service
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./data-storage-service:/usr/src/app
+    networks:
+      - app-network
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=example_db
+
+  # Servicio de base de datos
+  db:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=example_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  db_data:
