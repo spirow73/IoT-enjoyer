@@ -1,6 +1,31 @@
+/*
+  ____          _____               _ _           _       
+ |  _ \        |  __ \             (_) |         | |      
+ | |_) |_   _  | |__) |_ _ _ __ _____| |__  _   _| |_ ___ 
+ |  _ <| | | | |  ___/ _` | '__|_  / | '_ \| | | | __/ _ \
+ | |_) | |_| | | |  | (_| | |   / /| | |_) | |_| | ||  __/
+ |____/ \__, | |_|   \__,_|_|  /___|_|_.__/ \__, |\__\___|
+         __/ |                               __/ |        
+        |___/                               |___/         
+    
+____________________________________
+/ Si necesitas ayuda, contáctame en \
+\ https://parzibyte.me               /
+ ------------------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+Creado por Parzibyte (https://parzibyte.me).
+------------------------------------------------------------------------------------------------
+Si el código es útil para ti, puedes agradecerme siguiéndome: https://parzibyte.me/blog/sigueme/
+Y compartiendo mi blog con tus amigos
+También tengo canal de YouTube: https://www.youtube.com/channel/UCroP4BTWjfM0CkGB6AFUoBg?sub_confirmation=1
+------------------------------------------------------------------------------------------------
+*/
 #include <SPI.h>
 #include <MFRC522.h>
-#include <Wire.h>
 
 /*
 In the ESP8266, D3 pin is RST_PIN and
@@ -13,7 +38,7 @@ MFRC522 reader(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key key;
 void setup()
 {
-  Serial.begin(9600); // Initialize serial communications and wait until it is ready
+  Serial.begin(115200); // Initialize serial communications and wait until it is ready
   while (!Serial)
   {
     // Nothing here. Just wait for serial to be present
@@ -32,4 +57,47 @@ void setup()
     key.keyByte[i] = 0xFF; //keyByte is defined in the "MIFARE_Key" 'struct' definition in the .h file of the library
   }
   Serial.println("Ready!");
+}
+
+void loop()
+{
+  // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
+  if (!reader.PICC_IsNewCardPresent())
+  {
+    return;
+  }
+
+  // Select one of the cards. This returns false if read is not successful; and if that happens, we stop the code
+  if (!reader.PICC_ReadCardSerial())
+  {
+    return;
+  }
+
+  // At this point, the serial can be read. We transform from byte to hex
+
+  String serial = "";
+  for (int x = 0; x < reader.uid.size; x++)
+  {
+    // If it is less than 10, we add zero
+    if (reader.uid.uidByte[x] < 0x10)
+    {
+      serial += "0";
+    }
+    // Transform the byte to hex
+    serial += String(reader.uid.uidByte[x], HEX);
+    // Add a hypen
+    if (x + 1 != reader.uid.size)
+    {
+      serial += "-";
+    }
+  }
+  // Transform to uppercase
+  serial.toUpperCase();
+
+  Serial.println("Read serial is: " + serial);
+
+  // Halt PICC
+  reader.PICC_HaltA();
+  // Stop encryption on PCD
+  reader.PCD_StopCrypto1();
 }
