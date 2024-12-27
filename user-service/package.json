@@ -1,17 +1,26 @@
 {
   "name": "user-service",
   "version": "1.0.0",
-  "description": "Servicio de gestión de usuarios",
+  "description": "",
+  "keywords": [
+    "user",
+    "service",
+    "api"
+  ],
+  "license": "ISC",
+  "author": "spirow",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "dev": "nodemon nodemon -L --inspect=0.0.0.0 src/index.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "express": "^4.21.2",
     "user-service": "file:"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.9"
   }
 }

@@ -1,10 +1,12 @@
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 // Datos de prueba (simulando la base de datos)
 const users = [
     { id: 1, rfid: "rfid123", name: "Usuario 1" },
     { id: 2, rfid: "rfid456", name: "Usuario 2" },
+    { id: 3, rfid: "rfid789", name: "Usuario Nodemon" },
 ];
 
 // Endpoint para obtener todos los usuarios
@@ -28,11 +30,11 @@ router.post('/', (req, res) => {
     const newUser = {
         id: users.length + 1,
         rfid: req.body.rfid,
-        name: req.body.name
-      };
-      users.push(newUser);
-      res.status(201).json(newUser);
-  });
+        name: req.body.name,
+    };
+    users.push(newUser);
+    res.status(201).json(newUser);
+});
 
-
-module.exports = router;
+// Exporta el router usando ES Modules
+export default router;
