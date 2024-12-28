@@ -14,6 +14,7 @@
 #define TONE_FREQUENCY 1000      // Frecuencia del tono del buzzer (Hz)
 #define BEEP_DURATION 100        // Duración del pitido en milisegundos
 #define BEEP_PAUSE 10           // Pausa entre pitidos en milisegundos
+#define MAX_UIDS 2              // Tamaño máximo del contenedor circular
 
 // Inicializamos el lector
 MFRC522 mfrc522(SS_PIN, RST_PIN);
@@ -30,8 +31,12 @@ Ticker buzzerTicker;
 // Bandera para iniciar sondeo
 volatile bool scanFlag = false;
 
-// Lista de tarjetas detectadas
-std::vector<String> detectedUIDs;
+typedef struct {
+  String detectedUIDs[MAX_UIDS];
+  int currentIndex = 0;
+} CircularBuffer;
+
+CircularBuffer uidBuffer;
 
 // Variables para manejo del buzzer
 int beepCount = 0;
@@ -189,21 +194,26 @@ String getUIDAsString() {
 
 // Verifica si un UID ya está registrado
 bool isUIDRegistered(String uid) {
-  for (String registeredUID : detectedUIDs) {
-    if (registeredUID == uid) return true;
+  for (int i = 0; i < MAX_UIDS; i++) {
+    if (uidBuffer.detectedUIDs[i] == uid) return true;
   }
   return false;
 }
 
-// Agrega un UID a la lista de tarjetas detectadas
+// Agrega un UID al contenedor circular
 void addUID(String uid) {
-  detectedUIDs.push_back(uid);
+  uidBuffer.detectedUIDs[uidBuffer.currentIndex] = uid;
+  uidBuffer.currentIndex = (uidBuffer.currentIndex + 1) % MAX_UIDS;
   Serial.print("Nuevo UID registrado: ");
   Serial.println(uid);
 }
 
+
 // Borra el registro de UIDs detectados
 void resetUIDs() {
-  detectedUIDs.clear();
+  for (int i = 0; i < MAX_UIDS; i++) {
+    uidBuffer.detectedUIDs[i] = "";
+  }
+  uidBuffer.currentIndex = 0;
   Serial.println("Registro de UIDs borrado.");
 }
