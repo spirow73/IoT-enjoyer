@@ -19,7 +19,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Esperando nueva tarjeta...");
   // Detectar nueva tarjeta
   if (!mfrc522.PICC_IsNewCardPresent()) {
     return;
@@ -38,22 +37,22 @@ void loop() {
   }
   Serial.println();
 
-  // // Llamar a las funciones de escritura y lectura
-  // writeDataToCard();
+  // Llamar a las funciones de lectura (escritura desactivada por ahora)
   readDataFromCard();
 
-  // Parar la lectura de la tarjeta
-  mfrc522.PICC_HaltA();
+  // Detener comunicación con la tarjeta
+  mfrc522.PICC_HaltA();         // Finaliza la comunicación con la tarjeta
+  mfrc522.PCD_StopCrypto1();    // Detener el uso de claves y reiniciar lector
 }
 
 // Función para escribir datos en la tarjeta
 void writeDataToCard() {
-  byte block = 4; // Número del bloque donde queremos escribir (de 4 a 15 para tarjetas MIFARE Classic de 1K)
+  byte block = 4; // Número del bloque donde queremos escribir
   byte dataBlock[] = {"Hola Mundo"}; // Datos a escribir (16 bytes máximo)
   MFRC522::StatusCode status;
 
   // Autenticar el bloque
-  MFRC522::MIFARE_Key key; // Llave por defecto (0xFF)
+  MFRC522::MIFARE_Key key;
   for (byte i = 0; i < 6; i++) key.keyByte[i] = 0xFF;
 
   status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
@@ -81,7 +80,7 @@ void readDataFromCard() {
   MFRC522::StatusCode status;
 
   // Autenticar el bloque
-  MFRC522::MIFARE_Key key; // Llave por defecto (0xFF)
+  MFRC522::MIFARE_Key key;
   for (byte i = 0; i < 6; i++) key.keyByte[i] = 0xFF;
 
   status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));

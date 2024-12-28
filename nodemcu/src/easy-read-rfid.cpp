@@ -2,6 +2,8 @@
 #include <MFRC522.h>
 
 // Definir pines según la asignación de la imagen
+
+#define IRQ_PIN D2 // Pin de las interrupciones
 #define RST_PIN D3 // Pin de reset conectado a GPIO0 (D3)
 #define SS_PIN D4  // Pin SS conectado a GPIO2 (D4)
 
