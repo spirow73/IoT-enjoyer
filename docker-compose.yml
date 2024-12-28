@@ -13,55 +13,55 @@ services:
       - app-network
     restart: unless-stopped
 
-  # Servicio de usuarios
-  user-service:
-    build:
-      context: ./user-service
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3000"
-    volumes:
-      - ./user-service:/usr/src/app
-    networks:
-      - app-network
-    restart: unless-stopped
-    command: npm run dev
-    environment:
-      - NODE_ENV=development
+  # # Servicio de usuarios
+  # user-service:
+  #   build:
+  #     context: ./user-service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3001:3000"
+  #   volumes:
+  #     - ./user-service:/usr/src/app
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+  #   command: npm run dev
+  #   environment:
+  #     - NODE_ENV=development
 
-  # Servicio de máquinas
-  machine-service:
-    build:
-      context: ./machine-service
-      dockerfile: Dockerfile
-    ports:
-      - "3002:3000"
-    volumes:
-      - ./machine-service:/usr/src/app
-    networks:
-      - app-network
-    command: npm run dev
-    restart: unless-stopped
+  # # Servicio de máquinas
+  # machine-service:
+  #   build:
+  #     context: ./machine-service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3002:3000"
+  #   volumes:
+  #     - ./machine-service:/usr/src/app
+  #   networks:
+  #     - app-network
+  #   command: npm run dev
+  #   restart: unless-stopped
 
-  # Servicio de base de datos y API
-  data-storage-service:
-    build:
-      context: ./data-storage-service
-      dockerfile: Dockerfile
-    ports:
-      - "3003:3000"
-    volumes:
-      - ./data-storage-service:/usr/src/app
-    networks:
-      - app-network
-    restart: unless-stopped
-    environment:
-      - NODE_ENV=development
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=example_db
+  # # Servicio de base de datos y API
+  # data-storage-service:
+  #   build:
+  #     context: ./data-storage-service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3003:3000"
+  #   volumes:
+  #     - ./data-storage-service:/usr/src/app
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+  #   environment:
+  #     - NODE_ENV=development
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=postgres
+  #     - DB_NAME=example_db
 
   # Servicio de base de datos
   db:
@@ -77,6 +77,20 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       - app-network
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    environment:
+      - TZ=Europe/Madrid    
+    volumes:
+      - ./mosquitto/conf/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001
+    restart: unless-stopped
 
 networks:
   app-network:
