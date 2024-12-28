@@ -3,24 +3,29 @@
 #include <Ticker.h>
 #include <vector> // Para manejar la lista de UIDs
 
-// Pines del NodeMCU para conectar el MFRC522
-#define RST_PIN D3  // Pin RST conectado al D3
-#define SS_PIN D4   // Pin SDA conectado al D4
+// Pines del NodeMCU para conectar el MFRC522 y el buzzer
+#define RST_PIN D3    // Pin RST conectado al D3
+#define SS_PIN D4     // Pin SDA conectado al D4
+#define buzzerPin D8  // Pin para el buzzer
 
 // Variables configurables
 #define POLL_INTERVAL 1000       // Intervalo de sondeo en milisegundos (1 segundo)
 #define UID_RESET_INTERVAL 60000 // Tiempo para borrar el registro de UIDs (ms)
+#define TONE_FREQUENCY 1000      // Frecuencia del tono del buzzer (Hz)
+#define BEEP_DURATION 100        // Duración del pitido en milisegundos
+#define BEEP_PAUSE 10           // Pausa entre pitidos en milisegundos
 
 // Inicializamos el lector
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 // Máquina de Estados
-enum State { IDLE, SCANNING, PROCESSING };
+enum State { IDLE, SCANNING, PROCESSING, POWER_UP_WAIT };
 State currentState = IDLE;
 
-// Tickers para sondeo y reinicio de UIDs
+// Tickers para sondeo, reinicio de UIDs y buzzer
 Ticker pollTicker;
 Ticker resetUIDTicker;
+Ticker buzzerTicker;
 
 // Bandera para iniciar sondeo
 volatile bool scanFlag = false;
@@ -28,15 +33,25 @@ volatile bool scanFlag = false;
 // Lista de tarjetas detectadas
 std::vector<String> detectedUIDs;
 
+// Variables para manejo del buzzer
+int beepCount = 0;
+int beepTarget = 0;
+bool buzzerActive = false;
+
+// Variables para manejar el temporizador de Soft Power-Down
+unsigned long powerUpStartTime = 0;
+
 // Prototipos de funciones
 void startScanning();
 void resetUIDs();
 void enterSoftPowerDown();
 void exitSoftPowerDown();
 void dumpCardDetails();
+String getUIDAsString();
 bool isUIDRegistered(String uid);
 void addUID(String uid);
-String getUIDAsString() ;
+void handleBuzzer();
+void startBeep(int times);
 
 void setup() {
   Serial.begin(115200);
@@ -46,11 +61,18 @@ void setup() {
   SPI.begin();
   mfrc522.PCD_Init();
 
+  // Configuramos el pin del buzzer como salida
+  pinMode(buzzerPin, OUTPUT);
+  digitalWrite(buzzerPin, LOW);
+
   // Configuramos el ticker para activar el sondeo
   pollTicker.attach_ms(POLL_INTERVAL, []() { scanFlag = true; });
 
   // Configuramos el ticker para borrar el registro de UIDs
   resetUIDTicker.attach_ms(UID_RESET_INTERVAL, resetUIDs);
+
+  // Configuramos el ticker para manejar el buzzer
+  buzzerTicker.attach_ms(BEEP_DURATION + BEEP_PAUSE, handleBuzzer);
 
   // Entramos en modo de bajo consumo inicialmente
   enterSoftPowerDown();
@@ -70,24 +92,32 @@ void loop() {
     case SCANNING:
       // Salimos del modo de bajo consumo para escanear
       exitSoftPowerDown();
+      powerUpStartTime = millis();
+      currentState = POWER_UP_WAIT; // Esperamos que se estabilice
+      break;
 
-      // Enviamos una solicitud para verificar la presencia de una tarjeta
-      if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
-        String uid = getUIDAsString();
+    case POWER_UP_WAIT:
+      // Esperamos el tiempo necesario para estabilización
+      if (millis() - powerUpStartTime >= 50) { // Reemplazo del delay
+        if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
+          String uid = getUIDAsString();
 
-        if (!isUIDRegistered(uid)) {
-          addUID(uid); // Registramos el UID
-          currentState = PROCESSING; // Cambiamos al estado de procesamiento
+          if (!isUIDRegistered(uid)) {
+            addUID(uid); // Registramos el UID
+            startBeep(1); // Nuevo UID, un pitido
+            currentState = PROCESSING; // Cambiamos al estado de procesamiento
+          } else {
+            Serial.println("Tarjeta ya detectada anteriormente. Ignorada.");
+            startBeep(2); // Tarjeta ya escaneada, dos pitidos
+            // Si ya fue detectada, volvemos a IDLE
+            enterSoftPowerDown();
+            currentState = IDLE;
+          }
         } else {
-          Serial.println("Tarjeta ya detectada anteriormente. Ignorada.");
-          // Si ya fue detectada, volvemos a IDLE
+          // Si no hay tarjeta, volvemos a IDLE y apagamos el lector
           enterSoftPowerDown();
           currentState = IDLE;
         }
-      } else {
-        // Si no hay tarjeta, volvemos a IDLE y apagamos el lector
-        enterSoftPowerDown();
-        currentState = IDLE;
       }
       break;
 
@@ -113,7 +143,27 @@ void enterSoftPowerDown() {
 void exitSoftPowerDown() {
   byte command = mfrc522.PCD_ReadRegister(MFRC522::CommandReg);
   mfrc522.PCD_WriteRegister(MFRC522::CommandReg, command & ~(1 << 4)); // Desactiva el PowerDown bit
-  delay(50); // Tiempo para que el lector se estabilice
+}
+
+// Función para manejar el buzzer con `tone`
+void handleBuzzer() {
+  if (buzzerActive) {
+    noTone(buzzerPin); // Apagamos el buzzer
+    buzzerActive = false;
+    beepCount++;
+  } else if (beepCount < beepTarget) {
+    tone(buzzerPin, TONE_FREQUENCY, BEEP_DURATION); // Activamos el buzzer con frecuencia
+    buzzerActive = true;
+  } else {
+    beepCount = 0;
+    beepTarget = 0;
+  }
+}
+
+// Función para iniciar un número de pitidos
+void startBeep(int times) {
+  beepTarget = times;
+  beepCount = 0;
 }
 
 // Función para mostrar los detalles de la tarjeta detectada
