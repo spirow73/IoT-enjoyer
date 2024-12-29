@@ -67,10 +67,10 @@ services:
   db:
     container_name: postgres-db
     build:
-      context: ./postgressql
+      context: ./postgresql
       dockerfile: dockerfile
     env_file: 
-      - ./postgressql/.env
+      - ./postgresql/.env
     ports:
       - "5432:5432"
     networks:
