@@ -76,6 +76,22 @@ services:
     networks:
       - app-network
 
+  # Servicio de API rest de sesiones de usuarios
+  session-service:
+    build:
+      context: ./session-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./session-service:/usr/src/app
+    networks:
+      - app-network
+    restart: unless-stopped
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+
   mosquitto:
     image: eclipse-mosquitto:latest
     container_name: mosquitto

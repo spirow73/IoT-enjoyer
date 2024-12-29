@@ -87,3 +87,29 @@ VALUES
 UPDATE machines
 SET is_active = FALSE
 WHERE name = 'Rowing Machine';
+
+-- Sesiones de Juan
+INSERT INTO user_machine_sessions (user_id, machine_id, start_time, end_time, is_active)
+VALUES 
+(1, 1, '2024-12-28 08:00:00', '2024-12-28 08:30:00', FALSE), -- Treadmill
+(1, 2, '2024-12-28 09:00:00', '2024-12-28 09:15:00', FALSE), -- Bench Press
+(1, 3, '2024-12-28 09:30:00', '2024-12-28 09:50:00', FALSE); -- Rowing Machine
+
+-- Sesiones de Alvaro
+INSERT INTO user_machine_sessions (user_id, machine_id, start_time, end_time, is_active)
+VALUES 
+(2, 1, '2024-12-28 10:00:00', '2024-12-28 10:45:00', FALSE), -- Treadmill
+(2, 2, '2024-12-28 11:00:00', '2024-12-28 11:30:00', FALSE), -- Bench Press
+(2, 3, '2024-12-28 11:45:00', NULL, TRUE);                   -- Rowing Machine (Sesión activa)
+
+-- Más sesiones para Juan
+INSERT INTO user_machine_sessions (user_id, machine_id, start_time, end_time, is_active)
+VALUES 
+(1, 1, '2024-12-29 07:30:00', '2024-12-29 08:00:00', FALSE), -- Treadmill
+(1, 2, '2024-12-29 08:15:00', '2024-12-29 08:45:00', FALSE); -- Bench Press
+
+-- Sesiones adicionales de Alvaro
+INSERT INTO user_machine_sessions (user_id, machine_id, start_time, end_time, is_active)
+VALUES 
+(2, 1, '2024-12-29 09:00:00', '2024-12-29 09:30:00', FALSE), -- Treadmill
+(2, 3, '2024-12-29 10:00:00', '2024-12-29 10:20:00', FALSE); -- Rowing Machine
