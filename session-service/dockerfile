@@ -1,0 +1,18 @@
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+# Copiar package.json y package-lock.json
+COPY package*.json ./
+
+# Instalar dependencias, incluyendo las de desarrollo
+RUN npm install --include=dev
+
+# Copiar todo el código fuente
+COPY . .
+
+# Exponer el puerto 3000
+EXPOSE 3000
+
+# Comando por defecto
+CMD ["nodemon", "src/index.js"]
