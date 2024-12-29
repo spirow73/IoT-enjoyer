@@ -28,3 +28,11 @@ package-lock.json
 
 # Other files you may wish to not track (e.g. configuration with credentials)
 config.local.json
+
+# NodeMCU
+/nodemcu/.pio
+/nodemcu/.vscode/.browse.c_cpp.db*
+/nodemcu/.vscode/c_cpp_properties.json
+/nodemcu/.vscode/launch.json
+/nodemcu/.vscode/ipch
+/nodemcu/src/config.h
