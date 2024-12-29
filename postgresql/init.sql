@@ -70,7 +70,6 @@ VALUES
 ('Juan', 'Perez', 'jhonny', '845ADC79'),
 ('Alvaro', 'Martin', 'alvmart', '4A27FBA9');
 
-
 -- Ejemplo de máquinas
 INSERT INTO machines (name, description)
 VALUES 
@@ -78,3 +77,13 @@ VALUES
 ('Bench Press', 'Strength training bench'),
 ('Rowing Machine', 'Full-body cardio machine');
 
+-- Relación inicial entre usuarios y máquinas
+INSERT INTO user_machine_sessions (user_id, machine_id, start_time)
+VALUES
+(1, 1, NOW()),  -- Juan utiliza la Treadmill
+(2, 2, NOW());  -- Alvaro utiliza el Bench Press
+
+-- Marcar una máquina en mantenimiento
+UPDATE machines
+SET is_active = FALSE
+WHERE name = 'Rowing Machine';
