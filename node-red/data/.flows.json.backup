@@ -1,0 +1,141 @@
+[
+    {
+        "id": "bb9791079ec54f20",
+        "type": "tab",
+        "label": "Flujo 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "86591f1206bc5fb2",
+        "type": "mqtt-broker",
+        "name": "gym",
+        "broker": "host.docker.internal",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "1020e0dfe5f62ccc",
+        "type": "mqtt in",
+        "z": "bb9791079ec54f20",
+        "name": "",
+        "topic": "devices/+/data",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "86591f1206bc5fb2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 360,
+        "y": 140,
+        "wires": [
+            [
+                "fe740f798ade0d32"
+            ]
+        ]
+    },
+    {
+        "id": "fe740f798ade0d32",
+        "type": "function",
+        "z": "bb9791079ec54f20",
+        "name": "function 1",
+        "func": "let topicParts = msg.topic.split(\"/\"); // Divide el tópico para extraer la MAC\nlet mac = topicParts[1]; // Obtiene la MAC del dispositivo desde el tópico\nlet deviceId = msg.payload.device_id; // Obtiene el device_id del mensaje JSON\nlet rfid = msg.payload.rfid; // Obtiene el RFID del mensaje JSON\n\n// El servidor espera 'user_id' y 'machine_id'\n// Construimos el objeto correctamente\nmsg.payload = {\n    user_id: rfid,          // Suponiendo que el rfid representa el usuario\n    machine_id: deviceId    // El device_id representa la máquina\n};\n\n// Configurar los encabezados HTTP\nmsg.headers = {\n    \"Content-Type\": \"application/json\" // Indica que el cuerpo es un JSON\n};\n\n// Configurar la llamada a la API\nmsg.method = \"POST\"; // POST para registrar el inicio de la sesión\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 140,
+        "wires": [
+            [
+                "f9e62ba90c1ca003",
+                "89dd6c6055a9ad35"
+            ]
+        ]
+    },
+    {
+        "id": "f9e62ba90c1ca003",
+        "type": "debug",
+        "z": "bb9791079ec54f20",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "89dd6c6055a9ad35",
+        "type": "http request",
+        "z": "bb9791079ec54f20",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://host.docker.internal:3000/sessions",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 870,
+        "y": 240,
+        "wires": [
+            [
+                "263004cea7460c94"
+            ]
+        ]
+    },
+    {
+        "id": "263004cea7460c94",
+        "type": "debug",
+        "z": "bb9791079ec54f20",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1110,
+        "y": 340,
+        "wires": []
+    }
+]

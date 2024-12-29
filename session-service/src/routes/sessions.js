@@ -5,15 +5,15 @@ const router = express.Router();
 
 // Registrar el acceso de un usuario a una máquina
 router.post("/", async (req, res) => {
-  const { user_id, machine_id } = req.body;
+  const { rfid_tag, machine_id } = req.body;
 
   try {
     const query = `
-      INSERT INTO user_machine_sessions (user_id, machine_id, start_time, is_active)
+      INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, is_active)
       VALUES ($1, $2, NOW(), TRUE)
       RETURNING *;
     `;
-    const values = [user_id, machine_id];
+    const values = [rfid_tag, machine_id];
     const result = await pool.query(query, values);
 
     res.status(201).json({
@@ -62,19 +62,19 @@ router.patch("/:session_id", async (req, res) => {
 });
 
 // Obtener todas las sesiones de un usuario
-router.get("/user/:user_id", async (req, res) => {
-  const { user_id } = req.params;
+router.get("/user/:rfid_tag", async (req, res) => {
+  const { rfid_tag } = req.params;
 
   try {
     const query = `
       SELECT u.first_name, u.last_name, m.name AS machine_name,
              s.start_time, s.end_time, s.is_active
       FROM user_machine_sessions s
-      JOIN users u ON s.user_id = u.id
+      JOIN users u ON s.rfid_tag = u.rfid_tag
       JOIN machines m ON s.machine_id = m.id
-      WHERE s.user_id = $1;
+      WHERE s.rfid_tag = $1;
     `;
-    const values = [user_id];
+    const values = [rfid_tag];
     const result = await pool.query(query, values);
 
     res.status(200).json({
@@ -94,7 +94,7 @@ router.get("/active", async (req, res) => {
       SELECT u.first_name, u.last_name, m.name AS machine_name,
              s.start_time
       FROM user_machine_sessions s
-      JOIN users u ON s.user_id = u.id
+      JOIN users u ON s.rfid_tag = u.rfid_tag
       JOIN machines m ON s.machine_id = m.id
       WHERE s.is_active = TRUE;
     `;

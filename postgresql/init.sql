@@ -1,4 +1,3 @@
--- init.sql
 -- Crear la base de datos
 CREATE DATABASE gym_db;
 
@@ -7,11 +6,10 @@ CREATE DATABASE gym_db;
 
 -- Crear tabla `users` (Usuarios del gimnasio)
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,               -- Identificador único del usuario
+    rfid_tag VARCHAR(100) PRIMARY KEY,   -- Identificador único de la tarjeta RFID (clave primaria)
     first_name VARCHAR(100) NOT NULL,    -- Nombre del usuario
     last_name VARCHAR(100) NOT NULL,     -- Apellido del usuario
     username VARCHAR(100) UNIQUE NOT NULL, -- Nombre de usuario único
-    rfid_tag VARCHAR(100) UNIQUE,        -- Identificador de la tarjeta RFID (opcional)
     created_at TIMESTAMP DEFAULT NOW(),  -- Fecha de creación del usuario
     updated_at TIMESTAMP DEFAULT NOW()   -- Fecha de última actualización
 );
@@ -30,7 +28,7 @@ CREATE TABLE IF NOT EXISTS machines (
 -- Crear tabla `user_machine_sessions` (Registro de uso de máquinas por usuarios)
 CREATE TABLE IF NOT EXISTS user_machine_sessions (
     id SERIAL PRIMARY KEY,               -- Identificador único de la sesión
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- Relación con la tabla users
+    rfid_tag VARCHAR(100) NOT NULL REFERENCES users(rfid_tag) ON DELETE CASCADE, -- Relación con la tabla users por RFID
     machine_id INT NOT NULL REFERENCES machines(id) ON DELETE CASCADE, -- Relación con la tabla machines
     start_time TIMESTAMP DEFAULT NOW(),  -- Inicio de la sesión
     end_time TIMESTAMP,                  -- Fin de la sesión (opcional mientras esté en uso)
@@ -58,17 +56,17 @@ EXECUTE FUNCTION prevent_use_while_inactive();
 -- Crear tabla `user_checkins` (Opcional, para gestionar entradas y salidas al gimnasio)
 CREATE TABLE IF NOT EXISTS user_checkins (
     id SERIAL PRIMARY KEY,               -- Identificador único del registro
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- Relación con usuarios
+    rfid_tag VARCHAR(100) NOT NULL REFERENCES users(rfid_tag) ON DELETE CASCADE, -- Relación con usuarios
     checkin_time TIMESTAMP DEFAULT NOW(),-- Hora de entrada al gimnasio
     checkout_time TIMESTAMP              -- Hora de salida del gimnasio
 );
 
 -- Insertar datos iniciales en las tablas
 -- Ejemplo de usuarios
-INSERT INTO users (first_name, last_name, username, rfid_tag)
+INSERT INTO users (rfid_tag, first_name, last_name, username)
 VALUES 
-('Juan', 'Perez', 'jhonny', '845ADC79'),
-('Alvaro', 'Martin', 'alvmart', '4A27FBA9');
+('845ADC79', 'Juan', 'Perez', 'jhonny'),
+('4A27FBA9', 'Alvaro', 'Martin', 'alvmart');
 
 -- Ejemplo de máquinas
 INSERT INTO machines (name, description)
@@ -78,10 +76,10 @@ VALUES
 ('Rowing Machine', 'Full-body cardio machine');
 
 -- Relación inicial entre usuarios y máquinas
-INSERT INTO user_machine_sessions (user_id, machine_id, start_time)
+INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time)
 VALUES
-(1, 1, NOW()),  -- Juan utiliza la Treadmill
-(2, 2, NOW());  -- Alvaro utiliza el Bench Press
+('845ADC79', 1, NOW()),  -- Juan utiliza la Treadmill
+('4A27FBA9', 2, NOW());  -- Alvaro utiliza el Bench Press
 
 -- Marcar una máquina en mantenimiento
 UPDATE machines
@@ -89,27 +87,27 @@ SET is_active = FALSE
 WHERE name = 'Rowing Machine';
 
 -- Sesiones de Juan
-INSERT INTO user_machine_sessions (user_id, machine_id, start_time, end_time, is_active)
+INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, end_time, is_active)
 VALUES 
-(1, 1, '2024-12-28 08:00:00', '2024-12-28 08:30:00', FALSE), -- Treadmill
-(1, 2, '2024-12-28 09:00:00', '2024-12-28 09:15:00', FALSE), -- Bench Press
-(1, 3, '2024-12-28 09:30:00', '2024-12-28 09:50:00', FALSE); -- Rowing Machine
+('845ADC79', 1, '2024-12-28 08:00:00', '2024-12-28 08:30:00', FALSE), -- Treadmill
+('845ADC79', 2, '2024-12-28 09:00:00', '2024-12-28 09:15:00', FALSE), -- Bench Press
+('845ADC79', 3, '2024-12-28 09:30:00', '2024-12-28 09:50:00', FALSE); -- Rowing Machine
 
 -- Sesiones de Alvaro
-INSERT INTO user_machine_sessions (user_id, machine_id, start_time, end_time, is_active)
+INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, end_time, is_active)
 VALUES 
-(2, 1, '2024-12-28 10:00:00', '2024-12-28 10:45:00', FALSE), -- Treadmill
-(2, 2, '2024-12-28 11:00:00', '2024-12-28 11:30:00', FALSE), -- Bench Press
-(2, 3, '2024-12-28 11:45:00', NULL, TRUE);                   -- Rowing Machine (Sesión activa)
+('4A27FBA9', 1, '2024-12-28 10:00:00', '2024-12-28 10:45:00', FALSE), -- Treadmill
+('4A27FBA9', 2, '2024-12-28 11:00:00', '2024-12-28 11:30:00', FALSE), -- Bench Press
+('4A27FBA9', 3, '2024-12-28 11:45:00', NULL, TRUE);                   -- Rowing Machine (Sesión activa)
 
 -- Más sesiones para Juan
-INSERT INTO user_machine_sessions (user_id, machine_id, start_time, end_time, is_active)
+INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, end_time, is_active)
 VALUES 
-(1, 1, '2024-12-29 07:30:00', '2024-12-29 08:00:00', FALSE), -- Treadmill
-(1, 2, '2024-12-29 08:15:00', '2024-12-29 08:45:00', FALSE); -- Bench Press
+('845ADC79', 1, '2024-12-29 07:30:00', '2024-12-29 08:00:00', FALSE), -- Treadmill
+('845ADC79', 2, '2024-12-29 08:15:00', '2024-12-29 08:45:00', FALSE); -- Bench Press
 
 -- Sesiones adicionales de Alvaro
-INSERT INTO user_machine_sessions (user_id, machine_id, start_time, end_time, is_active)
+INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, end_time, is_active)
 VALUES 
-(2, 1, '2024-12-29 09:00:00', '2024-12-29 09:30:00', FALSE), -- Treadmill
-(2, 3, '2024-12-29 10:00:00', '2024-12-29 10:20:00', FALSE); -- Rowing Machine
+('4A27FBA9', 1, '2024-12-29 09:00:00', '2024-12-29 09:30:00', FALSE), -- Treadmill
+('4A27FBA9', 3, '2024-12-29 10:00:00', '2024-12-29 10:20:00', FALSE); -- Rowing Machine

@@ -20,6 +20,9 @@
 #define BEEP_PAUSE 10           // Pausa entre pitidos en milisegundos
 #define MAX_UIDS 2              // Tamaño máximo del contenedor circular
 
+// Define del heartbeat
+#define HEART_BEAT_TIME 10
+
 // Configuración WiFi
 const char* ssid = WIFI_SSID;
 const char* password = WIFI_PASSWORD;
@@ -102,7 +105,7 @@ void callback(char* topic, byte* payload, unsigned int length); // Manejar mensa
 void connectToMQTT(); // Función para conectarse al broker MQTT
 void sendHeartbeat(); // Función para enviar heartbeat
 void handleShutdown(); // Función para manejar el estado SHUTDOWN
-
+void sendRFIDMessage(const String& uid);
 
 // Máquina de estados combinada (rfid y mqtt)
 void handleState() {
@@ -114,8 +117,9 @@ void handleState() {
 
     case CONNECTING_MQTT:
       if (client.connected()) {
+        sendHeartbeat();
+        Serial.println("MQTT conectado.");
         currentState = RUNNING_IDLE;
-        Serial.println("MQTT conectado. Estado: RUNNING_IDLE");
       } else {
         connectToMQTT();
       }
@@ -146,11 +150,7 @@ void handleState() {
                 startBeep(1);
 
                 // Enviar UID al tema /rfid
-                char rfid_topic[50];
-                sprintf(rfid_topic, "devices/%s/rfid", device_mac.c_str());
-                client.publish(rfid_topic, uid.c_str());
-                Serial.print("RFID enviado a /rfid: ");
-                Serial.println(uid);
+                sendRFIDMessage(uid);
 
                 // Mostrar detalles y detener comunicación con la tarjeta
                 Serial.println("Procesando tarjeta detectada:");
@@ -161,7 +161,7 @@ void handleState() {
                 startBeep(2);
             }
         }
-
+        
         // Entrar en modo de bajo consumo y volver a IDLE
         enterSoftPowerDown();
         currentState = RUNNING_IDLE;
@@ -195,7 +195,7 @@ void setup() {
   digitalWrite(buzzerPin, LOW);
 
   // Inicialización de Tickers
-  heartbeatTicker.attach(10, sendHeartbeat); // Enviar heartbeat cada 10 segundos
+  heartbeatTicker.attach(HEART_BEAT_TIME, sendHeartbeat); // Enviar heartbeat cada 10 segundos
   pollTicker.attach_ms(POLL_INTERVAL, []() { scanFlag = true; }); // Activar sondeo RFID
   resetUIDTicker.attach_ms(UID_RESET_INTERVAL, resetUIDs); // Borrar UIDs
   buzzerTicker.attach_ms(BEEP_DURATION + BEEP_PAUSE, handleBuzzer); // Manejar buzzer
@@ -364,7 +364,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 // Función para conectarse al broker MQTT
 void connectToMQTT() {
   if (!client.connected()) {
-    Serial.print("Intentando conectar al broker MQTT...");
+    Serial.println("Intentando conectar al broker MQTT...");
     String client_id = "NodeMCU_" + device_mac;
     if (client.connect(client_id.c_str())) {
       Serial.println("Conectado a MQTT");
@@ -374,7 +374,7 @@ void connectToMQTT() {
       client.subscribe(("devices/" + device_mac + "/shutdown").c_str());
       Serial.println("Suscrito a config y shutdown");
 
-      currentState = RUNNING_IDLE; // Cambiar a estado RUNNING al conectar
+      currentState = static_cast<UnifiedState>(CONNECTING_MQTT + 1);
     } else {
       Serial.print("Falló, rc=");
       Serial.print(client.state());
@@ -414,4 +414,25 @@ void handleShutdown() {
 
   delay(1000);
   ESP.restart(); // Reinicia el dispositivo
+}
+
+void sendRFIDMessage(const String& rfid) {
+  // Crear un documento JSON
+  StaticJsonDocument<256> jsonDoc;
+  jsonDoc["device_id"] = device_id;  // Agrega el device_id
+  jsonDoc["rfid"] = rfid;           // Agrega el UID del RFID escaneado
+
+  // Serializar el JSON a una cadena
+  char rfid_message[256];
+  serializeJson(jsonDoc, rfid_message);
+
+  // Construir el tópico de publicación
+  String topic = "devices/" + device_mac + "/data";
+
+  // Publicar el mensaje al tópico
+  client.publish(topic.c_str(), rfid_message);
+
+  // Mostrar en el serial para depuración
+  Serial.println("RFID JSON enviado:");
+  Serial.println(rfid_message);
 }

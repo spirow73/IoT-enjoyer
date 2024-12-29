@@ -1,18 +1,5 @@
 services:
   # Servicio de Node-RED
-  node-red:
-    image: nodered/node-red:latest
-    container_name: node-red
-    environment:
-      - TZ=Europe/Madrid
-    ports:
-      - "1880:1880"
-    volumes:
-      - ./node-red/data:/data
-    networks:
-      - app-network
-    restart: unless-stopped
-
   # # Servicio de usuarios
   # user-service:
   #   build:
@@ -63,6 +50,20 @@ services:
   #     - DB_PASSWORD=postgres
   #     - DB_NAME=example_db
 
+  # Nodered
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    environment:
+      - TZ=Europe/Madrid
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node-red/data:/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
   # Servicio de base de datos
   db:
     container_name: postgres-db
@@ -78,6 +79,7 @@ services:
 
   # Servicio de API rest de sesiones de usuarios
   session-service:
+    container_name: session-service
     build:
       context: ./session-service
       dockerfile: Dockerfile

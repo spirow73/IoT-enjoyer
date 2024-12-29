@@ -13,10 +13,10 @@ const PORT = 3000;
 app.use(express.json());
 
 // Registrar las rutas
-app.use("/api/machines", machineRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/sessions", sessionRoutes);
-app.use("/api/reports", reportRoutes);
+app.use("/machines", machineRoutes);
+app.use("/users", userRoutes);
+app.use("/sessions", sessionRoutes);
+app.use("/reports", reportRoutes);
 
 // Endpoint raíz para verificar el servidor
 app.get("/", (req, res) => {
