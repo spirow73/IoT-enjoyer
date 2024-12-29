@@ -3,35 +3,110 @@ import pool from "../db/dbConnection.js";
 
 const router = express.Router();
 
-// Obtener la media de tiempo de uso de una máquina por un usuario
-router.get("/average-time/:userId/:machineId", async (req, res) => {
-  const { userId, machineId } = req.params;
+// Registrar el acceso de un usuario a una máquina
+router.post("/", async (req, res) => {
+  const { user_id, machine_id } = req.body;
 
   try {
     const query = `
-      SELECT AVG(EXTRACT(EPOCH FROM (end_time - start_time))) AS average_time_seconds
-      FROM user_machine_sessions
-      WHERE user_id = $1 AND machine_id = $2 AND end_time IS NOT NULL;
+      INSERT INTO user_machine_sessions (user_id, machine_id, start_time, is_active)
+      VALUES ($1, $2, NOW(), TRUE)
+      RETURNING *;
     `;
-    const values = [userId, machineId];
-
+    const values = [user_id, machine_id];
     const result = await pool.query(query, values);
 
-    if (result.rows[0].average_time_seconds === null) {
-      return res.status(404).json({
-        error: "No hay sesiones registradas con tiempos de finalización para este usuario y máquina.",
-      });
+    res.status(201).json({
+      status: "success",
+      message: "Sesión iniciada exitosamente",
+      data: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Error al iniciar sesión en máquina:", error.message);
+    if (error.code === "23505") {
+      return res
+        .status(400)
+        .json({ error: "Ya existe una sesión activa para este usuario en otra máquina" });
+    }
+    res.status(500).json({ error: "Error al iniciar sesión en máquina" });
+  }
+});
+
+// Registrar el fin de una sesión activa
+router.patch("/:session_id", async (req, res) => {
+  const { session_id } = req.params;
+
+  try {
+    const query = `
+      UPDATE user_machine_sessions
+      SET end_time = NOW(), is_active = FALSE
+      WHERE id = $1 AND is_active = TRUE
+      RETURNING *;
+    `;
+    const values = [session_id];
+    const result = await pool.query(query, values);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Sesión activa no encontrada o ya finalizada" });
     }
 
     res.status(200).json({
-      user_id: userId,
-      machine_id: machineId,
-      average_time_seconds: result.rows[0].average_time_seconds,
-      average_time_minutes: result.rows[0].average_time_seconds / 60,
+      status: "success",
+      message: "Sesión finalizada exitosamente",
+      data: result.rows[0],
     });
   } catch (error) {
-    console.error("Error al calcular la media de tiempo:", error.message);
-    res.status(500).json({ error: "Error al calcular la media de tiempo" });
+    console.error("Error al finalizar sesión en máquina:", error.message);
+    res.status(500).json({ error: "Error al finalizar la sesión" });
+  }
+});
+
+// Obtener todas las sesiones de un usuario
+router.get("/user/:user_id", async (req, res) => {
+  const { user_id } = req.params;
+
+  try {
+    const query = `
+      SELECT u.first_name, u.last_name, m.name AS machine_name,
+             s.start_time, s.end_time, s.is_active
+      FROM user_machine_sessions s
+      JOIN users u ON s.user_id = u.id
+      JOIN machines m ON s.machine_id = m.id
+      WHERE s.user_id = $1;
+    `;
+    const values = [user_id];
+    const result = await pool.query(query, values);
+
+    res.status(200).json({
+      status: "success",
+      data: result.rows,
+    });
+  } catch (error) {
+    console.error("Error al obtener sesiones del usuario:", error.message);
+    res.status(500).json({ error: "Error al obtener las sesiones del usuario" });
+  }
+});
+
+// Obtener todas las sesiones activas
+router.get("/active", async (req, res) => {
+  try {
+    const query = `
+      SELECT u.first_name, u.last_name, m.name AS machine_name,
+             s.start_time
+      FROM user_machine_sessions s
+      JOIN users u ON s.user_id = u.id
+      JOIN machines m ON s.machine_id = m.id
+      WHERE s.is_active = TRUE;
+    `;
+    const result = await pool.query(query);
+
+    res.status(200).json({
+      status: "success",
+      data: result.rows,
+    });
+  } catch (error) {
+    console.error("Error al obtener sesiones activas:", error.message);
+    res.status(500).json({ error: "Error al obtener las sesiones activas" });
   }
 });
 
