@@ -75,13 +75,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
     DeserializationError error = deserializeJson(jsonDoc, message);
 
     if (!error) {
-      if (jsonDoc.containsKey("name")) {
+      if (jsonDoc["name"].is<const char*>()) {
         device_name = jsonDoc["name"].as<String>();
       }
-      if (jsonDoc.containsKey("id")) {
+      if (jsonDoc["id"].is<const char*>()) {
         device_id = jsonDoc["id"].as<String>();
       }
-      if (jsonDoc.containsKey("machine")) {
+      if (jsonDoc["machine"].is<const char*>()) {
         device_machine = jsonDoc["machine"].as<String>();
       }
       Serial.println("Configuración actualizada:");
