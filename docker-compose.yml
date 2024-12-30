@@ -79,14 +79,14 @@ services:
 
   # Servicio de API rest de sesiones de usuarios
   session-service:
-    container_name: session-service
+    container_name: api
     build:
-      context: ./session-service
+      context: ./api
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - ./session-service:/usr/src/app
+      - ./api:/usr/src/app
     networks:
       - app-network
     restart: unless-stopped
