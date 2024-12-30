@@ -28,7 +28,7 @@ services:
       - app-network
 
   # Servicio de API rest de sesiones de usuarios
-  session-service:
+  api:
     container_name: api
     build:
       context: ./api
