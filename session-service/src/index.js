@@ -2,7 +2,6 @@ import express from "express";
 import machineRoutes from "./routes/machines.js";
 import userRoutes from "./routes/users.js";
 import sessionRoutes from "./routes/sessions.js";
-import reportRoutes from "./routes/reports.js";
 
 import pool from "./db/dbConnection.js"; // Importar conexión para inicializarla
 
@@ -16,7 +15,6 @@ app.use(express.json());
 app.use("/machines", machineRoutes);
 app.use("/users", userRoutes);
 app.use("/sessions", sessionRoutes);
-app.use("/reports", reportRoutes);
 
 // Endpoint raíz para verificar el servidor
 app.get("/", (req, res) => {
