@@ -20,9 +20,12 @@
 #define BEEP_PAUSE 10           // Pausa entre pitidos en milisegundos
 #define MAX_UIDS 1              // Tamaño máximo del contenedor circular
 
+#define CLOSE_SESSION false
+#define OPEN_SESSION true
+
 #define DELETE_UIDS_TIKER false
 
-// Define del heartbeat
+// Define del heartbeat en segundos
 #define HEART_BEAT_TIME 20
 
 // Configuración WiFi
@@ -31,11 +34,10 @@ const char* password = WIFI_PASSWORD;
 
 // Configuración MQTT server
 const char* mqtt_server = BROKER_ADDR;
-const int mqtt_port = 1883;
+const int mqtt_port = BROKER_PORT;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-
 
 // Variables internas para manejar mqtt
 // Variables globales
@@ -118,12 +120,10 @@ void handleState() {
       break;
 
     case CONNECTING_MQTT:
-      if (client.connected()) {
-        sendHeartbeat();
-        Serial.println("MQTT conectado.");
-        currentState = RUNNING_IDLE;
-      } else {
+      if (!client.connected()) {
         connectToMQTT();
+      } else {
+        currentState = RUNNING_IDLE;
       }
       break;
 
@@ -152,14 +152,14 @@ void handleState() {
                   String previousUID = uidBuffer.detectedUIDs[(uidBuffer.currentIndex - 1 + MAX_UIDS) % MAX_UIDS];
                   if (!previousUID.isEmpty() && previousUID != uid) {
                       // Enviar cierre de sesión para el UID anterior
-                      sendRFIDMessage(previousUID, false); // false indica cierre de sesión
+                      sendRFIDMessage(previousUID, CLOSE_SESSION); // cierra la sesion
                   }
 
                   addUID(uid);
                   startBeep(1);
 
                   // Enviar mensaje de inicio de sesión para el nuevo UID
-                  sendRFIDMessage(uid, true); // true indica inicio de sesión
+                  sendRFIDMessage(uid, OPEN_SESSION); // indica inicio de sesión
 
                   // Mostrar detalles y detener comunicación con la tarjeta
                   Serial.println("Procesando tarjeta detectada:");
@@ -168,10 +168,10 @@ void handleState() {
               } else {
                   Serial.println("UID ya registrado. Enviando mensaje de cierre de sesión.");
                   startBeep(2);
-                  resetUIDs();
+                  resetUIDs();  // limpia el buffer de uids
 
                   // Enviar mensaje de cierre de sesión para el UID registrado
-                  sendRFIDMessage(uid, false); // false indica cierre de sesión
+                  sendRFIDMessage(uid, CLOSE_SESSION); // indica cierre de sesión
               }
           }
           

@@ -277,7 +277,7 @@
         "id": "b05fa8d517d49598",
         "type": "ui_button",
         "z": "bb9791079ec54f20",
-        "name": "D8:BF:C0:10:26:DE",
+        "name": "nodo juanan (D8)",
         "group": "e76336306f89b034",
         "order": 0,
         "width": "0",
@@ -293,7 +293,7 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 440,
+        "x": 430,
         "y": 520,
         "wires": [
             [

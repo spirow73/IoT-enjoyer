@@ -414,7 +414,7 @@
         "type": "function",
         "z": "bb9791079ec54f20",
         "name": "function 3",
-        "func": "if (msg.payload.status === \"success\") {\n    // Convertir el tiempo promedio a minutos con 2 decimales\n    const averageTimeSeconds = parseFloat(msg.payload.average_time_seconds);\n    const averageTimeMinutes = (averageTimeSeconds / 60).toFixed(2);\n\n    msg.payload = `Tiempo promedio de uso: ${averageTimeMinutes} minutos`;\n} else {\n    msg.payload = \"Error: No se pudo obtener el tiempo promedio.\";\n}\nreturn msg;\n",
+        "func": "// Asegurarse de que el payload es un objeto JSON\nif (typeof msg.payload === \"string\") {\n    try {\n        msg.payload = JSON.parse(msg.payload);\n    } catch (error) {\n        msg.payload = \"Error: No se pudo procesar la respuesta del servidor.\";\n        return msg;\n    }\n}\n\n// Verificar si la respuesta es un éxito\nif (msg.payload.status === \"success\") {\n    const averageTimeSeconds = parseFloat(msg.payload.average_time_seconds);\n    const averageTimeMinutes = (averageTimeSeconds / 60).toFixed(2);\n\n    msg.payload = `Tiempo promedio de uso: ${averageTimeMinutes} minutos`;\n} else {\n    msg.payload = \"Error: No se pudo obtener el tiempo promedio.\";\n}\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
