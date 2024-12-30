@@ -75,12 +75,6 @@ VALUES
 ('Bench Press', 'Strength training bench'),
 ('Rowing Machine', 'Full-body cardio machine');
 
--- Relación inicial entre usuarios y máquinas
-INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time)
-VALUES
-('845ADC79', 1, NOW()),  -- Juan utiliza la Treadmill
-('4A27FBA9', 2, NOW());  -- Alvaro utiliza el Bench Press
-
 -- Marcar una máquina en mantenimiento
 UPDATE machines
 SET is_active = FALSE
@@ -98,7 +92,6 @@ INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, end_time, i
 VALUES 
 ('4A27FBA9', 1, '2024-12-28 10:00:00', '2024-12-28 10:45:00', FALSE), -- Treadmill
 ('4A27FBA9', 2, '2024-12-28 11:00:00', '2024-12-28 11:30:00', FALSE), -- Bench Press
-('4A27FBA9', 3, '2024-12-28 11:45:00', NULL, TRUE);                   -- Rowing Machine (Sesión activa)
 
 -- Más sesiones para Juan
 INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, end_time, is_active)
