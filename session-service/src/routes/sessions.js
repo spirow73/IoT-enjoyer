@@ -5,59 +5,55 @@ const router = express.Router();
 
 // Registrar el acceso de un usuario a una máquina
 router.post("/", async (req, res) => {
-  const { rfid_tag, machine_id } = req.body;
+  const { rfid_tag, machine_id, session_status } = req.body;
 
-  try {
-    const query = `
-      INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, is_active)
-      VALUES ($1, $2, NOW(), TRUE)
-      RETURNING *;
-    `;
-    const values = [rfid_tag, machine_id];
-    const result = await pool.query(query, values);
+  if (session_status === "start") {
+    // Lógica para iniciar sesión
+    try {
+      const query = `
+        INSERT INTO user_machine_sessions (rfid_tag, machine_id, start_time, is_active)
+        VALUES ($1, $2, NOW(), TRUE)
+        RETURNING *;
+      `;
+      const values = [rfid_tag, machine_id];
+      const result = await pool.query(query, values);
 
-    res.status(201).json({
-      status: "success",
-      message: "Sesión iniciada exitosamente",
-      data: result.rows[0],
-    });
-  } catch (error) {
-    console.error("Error al iniciar sesión en máquina:", error.message);
-    if (error.code === "23505") {
-      return res
-        .status(400)
-        .json({ error: "Ya existe una sesión activa para este usuario en otra máquina" });
+      return res.status(201).json({
+        status: "success",
+        message: "Sesión iniciada exitosamente",
+        data: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error.message);
+      return res.status(500).json({ error: "Error al iniciar sesión" });
     }
-    res.status(500).json({ error: "Error al iniciar sesión en máquina" });
-  }
-});
+  } else if (session_status === "end") {
+    // Lógica para cerrar sesión
+    try {
+      const query = `
+        UPDATE user_machine_sessions
+        SET end_time = NOW(), is_active = FALSE
+        WHERE rfid_tag = $1 AND is_active = TRUE
+        RETURNING *;
+      `;
+      const values = [rfid_tag];
+      const result = await pool.query(query, values);
 
-// Registrar el fin de una sesión activa
-router.patch("/:session_id", async (req, res) => {
-  const { session_id } = req.params;
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: "Sesión activa no encontrada" });
+      }
 
-  try {
-    const query = `
-      UPDATE user_machine_sessions
-      SET end_time = NOW(), is_active = FALSE
-      WHERE id = $1 AND is_active = TRUE
-      RETURNING *;
-    `;
-    const values = [session_id];
-    const result = await pool.query(query, values);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Sesión activa no encontrada o ya finalizada" });
+      return res.status(200).json({
+        status: "success",
+        message: "Sesión finalizada exitosamente",
+        data: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error.message);
+      return res.status(500).json({ error: "Error al cerrar sesión" });
     }
-
-    res.status(200).json({
-      status: "success",
-      message: "Sesión finalizada exitosamente",
-      data: result.rows[0],
-    });
-  } catch (error) {
-    console.error("Error al finalizar sesión en máquina:", error.message);
-    res.status(500).json({ error: "Error al finalizar la sesión" });
+  } else {
+    return res.status(400).json({ error: "Estado de sesión no válido" });
   }
 });
 

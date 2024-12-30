@@ -18,10 +18,12 @@
 #define TONE_FREQUENCY 1000      // Frecuencia del tono del buzzer (Hz)
 #define BEEP_DURATION 100        // Duración del pitido en milisegundos
 #define BEEP_PAUSE 10           // Pausa entre pitidos en milisegundos
-#define MAX_UIDS 2              // Tamaño máximo del contenedor circular
+#define MAX_UIDS 1              // Tamaño máximo del contenedor circular
+
+#define DELETE_UIDS_TIKER false
 
 // Define del heartbeat
-#define HEART_BEAT_TIME 10
+#define HEART_BEAT_TIME 20
 
 // Configuración WiFi
 const char* ssid = WIFI_SSID;
@@ -38,7 +40,7 @@ PubSubClient client(espClient);
 // Variables internas para manejar mqtt
 // Variables globales
 String device_name = "Unknown Device";
-String device_id = "Unknown ID";
+String device_id = "1";
 String device_machine = "Unknown Machine";
 String dummy_message; // Mensaje general preparado en el setup
 String device_mac;
@@ -105,7 +107,7 @@ void callback(char* topic, byte* payload, unsigned int length); // Manejar mensa
 void connectToMQTT(); // Función para conectarse al broker MQTT
 void sendHeartbeat(); // Función para enviar heartbeat
 void handleShutdown(); // Función para manejar el estado SHUTDOWN
-void sendRFIDMessage(const String& uid);
+void sendRFIDMessage(const String& rfid, bool isStart);
 
 // Máquina de estados combinada (rfid y mqtt)
 void handleState() {
@@ -140,25 +142,36 @@ void handleState() {
       currentState = RUNNING_POWER_UP_WAIT;
       break;
 
-    case RUNNING_POWER_UP_WAIT:
+        case RUNNING_POWER_UP_WAIT:
     if (millis() - powerUpStartTime >= 50) {
         if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
             String uid = getUIDAsString();
 
             if (!isUIDRegistered(uid)) {
+                // Verificar si hay un UID activo previo que no haya cerrado sesión
+                String previousUID = uidBuffer.detectedUIDs[(uidBuffer.currentIndex - 1 + MAX_UIDS) % MAX_UIDS];
+                if (!previousUID.isEmpty() && previousUID != uid) {
+                    // Enviar cierre de sesión para el UID anterior
+                    sendRFIDMessage(previousUID, false); // false indica cierre de sesión
+                }
+
                 addUID(uid);
                 startBeep(1);
 
-                // Enviar UID al tema /rfid
-                sendRFIDMessage(uid);
+                // Enviar mensaje de inicio de sesión para el nuevo UID
+                sendRFIDMessage(uid, true); // true indica inicio de sesión
 
                 // Mostrar detalles y detener comunicación con la tarjeta
                 Serial.println("Procesando tarjeta detectada:");
                 dumpCardDetails();
                 mfrc522.PICC_HaltA();
             } else {
-                Serial.println("UID ya registrado.");
+                Serial.println("UID ya registrado. Enviando mensaje de cierre de sesión.");
                 startBeep(2);
+                resetUIDs();
+
+                // Enviar mensaje de cierre de sesión para el UID registrado
+                sendRFIDMessage(uid, false); // false indica cierre de sesión
             }
         }
         
@@ -197,7 +210,11 @@ void setup() {
   // Inicialización de Tickers
   heartbeatTicker.attach(HEART_BEAT_TIME, sendHeartbeat); // Enviar heartbeat cada 10 segundos
   pollTicker.attach_ms(POLL_INTERVAL, []() { scanFlag = true; }); // Activar sondeo RFID
+
+  if (DELETE_UIDS_TIKER){
   resetUIDTicker.attach_ms(UID_RESET_INTERVAL, resetUIDs); // Borrar UIDs
+  }
+
   buzzerTicker.attach_ms(BEEP_DURATION + BEEP_PAUSE, handleBuzzer); // Manejar buzzer
 
   // Modo de bajo consumo inicial para RFID
@@ -378,7 +395,8 @@ void connectToMQTT() {
     } else {
       Serial.print("Falló, rc=");
       Serial.print(client.state());
-      Serial.println(". Intentando de nuevo...");
+      Serial.println(". Intentando de nuevo en 5 segundos...");
+      delay(5000);
     }
   }
 }
@@ -407,7 +425,7 @@ void handleShutdown() {
   Serial.println("Apagando dispositivo...");
 
   // Eliminar la configuración del dispositivo (borrar datos del broker)
-  client.publish(("devices/" + device_mac + "/base").c_str(), "", true);      // Borra datos del tema base
+  client.publish(("devices/" + device_mac + "/data").c_str(), "", true);      // Borra datos del tema base
   client.publish(("devices/" + device_mac + "/config").c_str(), "", true);    // Borra datos del tema config
   client.publish(("devices/" + device_mac + "/heartbeat").c_str(), "", true); // Borra datos del tema heartbeat
   client.publish(("devices/" + device_mac + "/shutdown").c_str(), "", true);  // Borra el tema shutdown
@@ -416,11 +434,13 @@ void handleShutdown() {
   ESP.restart(); // Reinicia el dispositivo
 }
 
-void sendRFIDMessage(const String& rfid) {
+// Función sendRFIDMessage para manejar inicio/cierre de sesión
+void sendRFIDMessage(const String& rfid, bool isStart) {
   // Crear un documento JSON
   StaticJsonDocument<256> jsonDoc;
   jsonDoc["device_id"] = device_id;  // Agrega el device_id
   jsonDoc["rfid"] = rfid;           // Agrega el UID del RFID escaneado
+  jsonDoc["session_status"] = isStart ? "start" : "end"; // Define si es inicio o cierre de sesión
 
   // Serializar el JSON a una cadena
   char rfid_message[256];

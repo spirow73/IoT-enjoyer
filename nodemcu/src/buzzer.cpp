@@ -11,7 +11,7 @@ void setup() {
 void loop() {
   // Play a tone on the buzzer for 1 second
   tone(buzzerPin, 1000); // 1000 Hz frequency
-  delay(1000); // Delay for 1 second
+  delay(500); // Delay for 1 second
   noTone(buzzerPin); // Stop the tone
-  delay(1000); // Delay for 1 second
+  delay(20000); // Delay for 1 second
 }
