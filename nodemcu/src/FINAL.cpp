@@ -142,43 +142,43 @@ void handleState() {
       currentState = RUNNING_POWER_UP_WAIT;
       break;
 
-        case RUNNING_POWER_UP_WAIT:
-    if (millis() - powerUpStartTime >= 50) {
-        if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
-            String uid = getUIDAsString();
+    case RUNNING_POWER_UP_WAIT:
+      if (millis() - powerUpStartTime >= 50) {
+          if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
+              String uid = getUIDAsString();
 
-            if (!isUIDRegistered(uid)) {
-                // Verificar si hay un UID activo previo que no haya cerrado sesión
-                String previousUID = uidBuffer.detectedUIDs[(uidBuffer.currentIndex - 1 + MAX_UIDS) % MAX_UIDS];
-                if (!previousUID.isEmpty() && previousUID != uid) {
-                    // Enviar cierre de sesión para el UID anterior
-                    sendRFIDMessage(previousUID, false); // false indica cierre de sesión
-                }
+              if (!isUIDRegistered(uid)) {
+                  // Verificar si hay un UID activo previo que no haya cerrado sesión
+                  String previousUID = uidBuffer.detectedUIDs[(uidBuffer.currentIndex - 1 + MAX_UIDS) % MAX_UIDS];
+                  if (!previousUID.isEmpty() && previousUID != uid) {
+                      // Enviar cierre de sesión para el UID anterior
+                      sendRFIDMessage(previousUID, false); // false indica cierre de sesión
+                  }
 
-                addUID(uid);
-                startBeep(1);
+                  addUID(uid);
+                  startBeep(1);
 
-                // Enviar mensaje de inicio de sesión para el nuevo UID
-                sendRFIDMessage(uid, true); // true indica inicio de sesión
+                  // Enviar mensaje de inicio de sesión para el nuevo UID
+                  sendRFIDMessage(uid, true); // true indica inicio de sesión
 
-                // Mostrar detalles y detener comunicación con la tarjeta
-                Serial.println("Procesando tarjeta detectada:");
-                dumpCardDetails();
-                mfrc522.PICC_HaltA();
-            } else {
-                Serial.println("UID ya registrado. Enviando mensaje de cierre de sesión.");
-                startBeep(2);
-                resetUIDs();
+                  // Mostrar detalles y detener comunicación con la tarjeta
+                  Serial.println("Procesando tarjeta detectada:");
+                  dumpCardDetails();
+                  mfrc522.PICC_HaltA();
+              } else {
+                  Serial.println("UID ya registrado. Enviando mensaje de cierre de sesión.");
+                  startBeep(2);
+                  resetUIDs();
 
-                // Enviar mensaje de cierre de sesión para el UID registrado
-                sendRFIDMessage(uid, false); // false indica cierre de sesión
-            }
-        }
-        
-        // Entrar en modo de bajo consumo y volver a IDLE
-        enterSoftPowerDown();
-        currentState = RUNNING_IDLE;
-    }
+                  // Enviar mensaje de cierre de sesión para el UID registrado
+                  sendRFIDMessage(uid, false); // false indica cierre de sesión
+              }
+          }
+          
+          // Entrar en modo de bajo consumo y volver a IDLE
+          enterSoftPowerDown();
+          currentState = RUNNING_IDLE;
+      }
     break;
 
     case SHUTDOWN:
