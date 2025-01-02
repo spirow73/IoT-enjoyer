@@ -1,5 +1,4 @@
 services:
-
   # Nodered
   node-red:
     image: nodered/node-red:latest
@@ -20,7 +19,7 @@ services:
     build:
       context: ./postgresql
       dockerfile: dockerfile
-    env_file: 
+    env_file:
       - ./postgresql/.env
     ports:
       - "5432:5432"
@@ -48,7 +47,7 @@ services:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
     environment:
-      - TZ=Europe/Madrid    
+      - TZ=Europe/Madrid
     volumes:
       - ./mosquitto/conf/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mosquitto/data:/mosquitto/data

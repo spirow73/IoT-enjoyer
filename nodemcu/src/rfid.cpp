@@ -28,7 +28,7 @@ void setup()
   // Note: 6 comes from MF_KEY_SIZE in MFRC522.h
   for (byte i = 0; i < 6; i++)
   {
-    key.keyByte[i] = 0xFF; //keyByte is defined in the "MIFARE_Key" 'struct' definition in the .h file of the library
+    key.keyByte[i] = 0xFF; // keyByte is defined in the "MIFARE_Key" 'struct' definition in the .h file of the library
   }
   Serial.println("Ready!");
 }

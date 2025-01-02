@@ -36,7 +36,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
 // Crear una nueva máquina
 router.post("/", async (req, res) => {
   const { name, description, is_in_use, is_active } = req.body;

@@ -10,11 +10,13 @@ MFRC522 mfrc522(SS_PIN, RST_PIN); // Crear instancia de MFRC522
 volatile bool flag = false; // Variable para manejar la interrupción
 
 // Función de interrupción
-void IRAM_ATTR readMyCard() {
+void IRAM_ATTR readMyCard()
+{
   flag = true;
 }
 
-void setup() {
+void setup()
+{
   Serial.begin(115200); // Iniciar comunicación serial
   SPI.begin();          // Iniciar bus SPI
   mfrc522.PCD_Init();   // Iniciar MFRC522
@@ -29,10 +31,10 @@ void setup() {
   Serial.println("Coloca una tarjeta RFID cerca del lector...");
 }
 
-void loop() {
+void loop()
+{
   int irqState = digitalRead(IRQ_PIN);
   Serial.print("IRQ_PIN state: ");
   Serial.println(irqState);
   delay(100); // Breve retraso para monitorear
 }
-

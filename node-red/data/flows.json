@@ -1,486 +1,450 @@
 [
-    {
-        "id": "bb9791079ec54f20",
-        "type": "tab",
-        "label": "Flujo 1",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "86591f1206bc5fb2",
-        "type": "mqtt-broker",
-        "name": "gym",
-        "broker": "host.docker.internal",
-        "port": 1883,
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": 4,
-        "keepalive": 60,
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "4fa1f3236459034d",
-        "type": "ui_base",
-        "theme": {
-            "name": "theme-light",
-            "lightTheme": {
-                "default": "#0094CE",
-                "baseColor": "#0094CE",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-                "edited": true,
-                "reset": false
-            },
-            "darkTheme": {
-                "default": "#097479",
-                "baseColor": "#097479",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-                "edited": false
-            },
-            "customTheme": {
-                "name": "Untitled Theme 1",
-                "default": "#4B7930",
-                "baseColor": "#4B7930",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-            },
-            "themeState": {
-                "base-color": {
-                    "default": "#0094CE",
-                    "value": "#0094CE",
-                    "edited": false
-                },
-                "page-titlebar-backgroundColor": {
-                    "value": "#0094CE",
-                    "edited": false
-                },
-                "page-backgroundColor": {
-                    "value": "#fafafa",
-                    "edited": false
-                },
-                "page-sidebar-backgroundColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "group-textColor": {
-                    "value": "#1bbfff",
-                    "edited": false
-                },
-                "group-borderColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "group-backgroundColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "widget-textColor": {
-                    "value": "#111111",
-                    "edited": false
-                },
-                "widget-backgroundColor": {
-                    "value": "#0094ce",
-                    "edited": false
-                },
-                "widget-borderColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "base-font": {
-                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-                }
-            },
-            "angularTheme": {
-                "primary": "indigo",
-                "accents": "blue",
-                "warn": "red",
-                "background": "grey",
-                "palette": "light"
-            }
+  {
+    "id": "bb9791079ec54f20",
+    "type": "tab",
+    "label": "Flujo 1",
+    "disabled": false,
+    "info": "",
+    "env": []
+  },
+  {
+    "id": "86591f1206bc5fb2",
+    "type": "mqtt-broker",
+    "name": "gym",
+    "broker": "host.docker.internal",
+    "port": 1883,
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": 4,
+    "keepalive": 60,
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "4fa1f3236459034d",
+    "type": "ui_base",
+    "theme": {
+      "name": "theme-light",
+      "lightTheme": {
+        "default": "#0094CE",
+        "baseColor": "#0094CE",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": true,
+        "reset": false
+      },
+      "darkTheme": {
+        "default": "#097479",
+        "baseColor": "#097479",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": false
+      },
+      "customTheme": {
+        "name": "Untitled Theme 1",
+        "default": "#4B7930",
+        "baseColor": "#4B7930",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+      },
+      "themeState": {
+        "base-color": {
+          "default": "#0094CE",
+          "value": "#0094CE",
+          "edited": false
         },
-        "site": {
-            "name": "Node-RED Dashboard",
-            "hideToolbar": "false",
-            "allowSwipe": "false",
-            "lockMenu": "false",
-            "allowTempTheme": "true",
-            "dateFormat": "DD/MM/YYYY",
-            "sizes": {
-                "sx": 48,
-                "sy": 48,
-                "gx": 6,
-                "gy": 6,
-                "cx": 6,
-                "cy": 6,
-                "px": 0,
-                "py": 0
-            }
+        "page-titlebar-backgroundColor": {
+          "value": "#0094CE",
+          "edited": false
+        },
+        "page-backgroundColor": {
+          "value": "#fafafa",
+          "edited": false
+        },
+        "page-sidebar-backgroundColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "group-textColor": {
+          "value": "#1bbfff",
+          "edited": false
+        },
+        "group-borderColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "group-backgroundColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "widget-textColor": {
+          "value": "#111111",
+          "edited": false
+        },
+        "widget-backgroundColor": {
+          "value": "#0094ce",
+          "edited": false
+        },
+        "widget-borderColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "base-font": {
+          "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
         }
+      },
+      "angularTheme": {
+        "primary": "indigo",
+        "accents": "blue",
+        "warn": "red",
+        "background": "grey",
+        "palette": "light"
+      }
     },
-    {
-        "id": "d13d61ac1a73b6eb",
-        "type": "ui_tab",
-        "name": "NodeMCU",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "e76336306f89b034",
-        "type": "ui_group",
-        "name": "MCU",
-        "tab": "d13d61ac1a73b6eb",
-        "order": 1,
-        "disp": true,
-        "width": 6,
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "c7b7499c72af489f",
-        "type": "ui_tab",
-        "name": "Peticiones a la bd",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "7ec8f56b79eb6555",
-        "type": "ui_group",
-        "name": "Tiempos de uso",
-        "tab": "c7b7499c72af489f",
-        "order": 1,
-        "disp": true,
-        "width": 6,
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "1020e0dfe5f62ccc",
-        "type": "mqtt in",
-        "z": "bb9791079ec54f20",
-        "name": "",
-        "topic": "devices/+/data",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "86591f1206bc5fb2",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 360,
-        "y": 140,
-        "wires": [
-            [
-                "fe740f798ade0d32"
-            ]
-        ]
-    },
-    {
-        "id": "fe740f798ade0d32",
-        "type": "function",
-        "z": "bb9791079ec54f20",
-        "name": "function 1",
-        "func": "let topicParts = msg.topic.split(\"/\"); // Divide el tópico para extraer la MAC\nlet mac = topicParts[1]; // Obtiene la MAC del dispositivo desde el tópico\nlet deviceId = msg.payload.device_id; // Obtiene el device_id del mensaje JSON\nlet rfid = msg.payload.rfid; // Obtiene el RFID del mensaje JSON\nlet sessionStatus = msg.payload.session_status; // Obtiene el estado de la sesión (start o end)\n\n// Validación de campos\nif (!sessionStatus || !rfid || !deviceId) {\n    node.error(\"Faltan campos obligatorios: rfid, device_id o session_status\");\n    return null;\n}\n\n// Construcción del payload para la API\nmsg.payload = {\n    rfid_tag: rfid,           // Identificador del usuario\n    machine_id: deviceId,     // Identificador de la máquina\n    session_status: sessionStatus // Estado de la sesión (start o end)\n};\n\n// Configurar la URL y método (solo POST es necesario)\nmsg.method = \"POST\";\nmsg.url = \"http://host.docker.internal:3000/sessions/\";\n\n// Configurar los encabezados HTTP\nmsg.headers = {\n    \"Content-Type\": \"application/json\" // Indica que el cuerpo es un JSON\n};\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 620,
-        "y": 140,
-        "wires": [
-            [
-                "f9e62ba90c1ca003",
-                "89dd6c6055a9ad35"
-            ]
-        ]
-    },
-    {
-        "id": "f9e62ba90c1ca003",
-        "type": "debug",
-        "z": "bb9791079ec54f20",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 860,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "89dd6c6055a9ad35",
-        "type": "http request",
-        "z": "bb9791079ec54f20",
-        "name": "",
-        "method": "use",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 870,
-        "y": 240,
-        "wires": [
-            [
-                "263004cea7460c94"
-            ]
-        ]
-    },
-    {
-        "id": "263004cea7460c94",
-        "type": "debug",
-        "z": "bb9791079ec54f20",
-        "name": "debug 2",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1110,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "b05fa8d517d49598",
-        "type": "ui_button",
-        "z": "bb9791079ec54f20",
-        "name": "nodo juanan (D8)",
-        "group": "e76336306f89b034",
-        "order": 0,
-        "width": "0",
-        "height": "0",
-        "passthru": false,
-        "label": "nodo juanan (D8)",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "sendConfig",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 430,
-        "y": 520,
-        "wires": [
-            [
-                "1d230b693ad3798f"
-            ]
-        ]
-    },
-    {
-        "id": "1d230b693ad3798f",
-        "type": "function",
-        "z": "bb9791079ec54f20",
-        "name": "function 2",
-        "func": "msg.topic = \"devices/D8:BF:C0:10:26:DE/config\";\nmsg.payload = {\n    \"name\": \"MCU1\",\n    \"id\": \"1\",\n    \"machine\": \"Treadmill\"\n};\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 620,
-        "y": 480,
-        "wires": [
-            [
-                "9961ad007c9a035d",
-                "ae03f08b46d30769"
-            ]
-        ]
-    },
-    {
-        "id": "9961ad007c9a035d",
-        "type": "mqtt out",
-        "z": "bb9791079ec54f20",
-        "name": "",
-        "topic": "",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "86591f1206bc5fb2",
-        "x": 850,
-        "y": 500,
-        "wires": []
-    },
-    {
-        "id": "ae03f08b46d30769",
-        "type": "debug",
-        "z": "bb9791079ec54f20",
-        "name": "debug 3",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 860,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "1153eb43a52622c0",
-        "type": "ui_button",
-        "z": "bb9791079ec54f20",
-        "name": "",
-        "group": "7ec8f56b79eb6555",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Juan y Treadmill",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 420,
-        "y": 660,
-        "wires": [
-            [
-                "def30411d0b327c1"
-            ]
-        ]
-    },
-    {
-        "id": "def30411d0b327c1",
-        "type": "http request",
-        "z": "bb9791079ec54f20",
-        "name": "",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "http://host.docker.internal:3000/sessions/average?rfid_tag=845ADC79&machine_id=1",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 710,
-        "y": 700,
-        "wires": [
-            [
-                "c79ede12412f15ec",
-                "41b54c6ece230f55"
-            ]
-        ]
-    },
-    {
-        "id": "c79ede12412f15ec",
-        "type": "function",
-        "z": "bb9791079ec54f20",
-        "name": "function 3",
-        "func": "// Asegurarse de que el payload es un objeto JSON\nif (typeof msg.payload === \"string\") {\n    try {\n        msg.payload = JSON.parse(msg.payload);\n    } catch (error) {\n        msg.payload = \"Error: No se pudo procesar la respuesta del servidor.\";\n        return msg;\n    }\n}\n\n// Verificar si la respuesta es un éxito\nif (msg.payload.status === \"success\") {\n    const averageTimeSeconds = parseFloat(msg.payload.average_time_seconds);\n    const averageTimeMinutes = (averageTimeSeconds / 60).toFixed(2);\n\n    msg.payload = `Tiempo promedio de uso: ${averageTimeMinutes} minutos`;\n} else {\n    msg.payload = \"Error: No se pudo obtener el tiempo promedio.\";\n}\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 940,
-        "y": 740,
-        "wires": [
-            [
-                "357b7b6d3f053ebf",
-                "64cf27576fbddb68"
-            ]
-        ]
-    },
-    {
-        "id": "357b7b6d3f053ebf",
-        "type": "ui_text",
-        "z": "bb9791079ec54f20",
-        "group": "7ec8f56b79eb6555",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "name": "",
-        "label": "Tiempo medio de Juan",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "className": "",
-        "style": false,
-        "font": "",
-        "fontSize": 16,
-        "color": "#000000",
-        "x": 1200,
-        "y": 760,
-        "wires": []
-    },
-    {
-        "id": "41b54c6ece230f55",
-        "type": "debug",
-        "z": "bb9791079ec54f20",
-        "name": "debug 4",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 910,
-        "y": 660,
-        "wires": []
-    },
-    {
-        "id": "64cf27576fbddb68",
-        "type": "debug",
-        "z": "bb9791079ec54f20",
-        "name": "debug 5",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1130,
-        "y": 700,
-        "wires": []
+    "site": {
+      "name": "Node-RED Dashboard",
+      "hideToolbar": "false",
+      "allowSwipe": "false",
+      "lockMenu": "false",
+      "allowTempTheme": "true",
+      "dateFormat": "DD/MM/YYYY",
+      "sizes": {
+        "sx": 48,
+        "sy": 48,
+        "gx": 6,
+        "gy": 6,
+        "cx": 6,
+        "cy": 6,
+        "px": 0,
+        "py": 0
+      }
     }
+  },
+  {
+    "id": "d13d61ac1a73b6eb",
+    "type": "ui_tab",
+    "name": "NodeMCU",
+    "icon": "dashboard",
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "e76336306f89b034",
+    "type": "ui_group",
+    "name": "MCU",
+    "tab": "d13d61ac1a73b6eb",
+    "order": 1,
+    "disp": true,
+    "width": 6,
+    "collapse": false,
+    "className": ""
+  },
+  {
+    "id": "c7b7499c72af489f",
+    "type": "ui_tab",
+    "name": "Peticiones a la bd",
+    "icon": "dashboard",
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "7ec8f56b79eb6555",
+    "type": "ui_group",
+    "name": "Tiempos de uso",
+    "tab": "c7b7499c72af489f",
+    "order": 1,
+    "disp": true,
+    "width": 6,
+    "collapse": false,
+    "className": ""
+  },
+  {
+    "id": "1020e0dfe5f62ccc",
+    "type": "mqtt in",
+    "z": "bb9791079ec54f20",
+    "name": "",
+    "topic": "devices/+/data",
+    "qos": "2",
+    "datatype": "auto-detect",
+    "broker": "86591f1206bc5fb2",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 360,
+    "y": 140,
+    "wires": [["fe740f798ade0d32"]]
+  },
+  {
+    "id": "fe740f798ade0d32",
+    "type": "function",
+    "z": "bb9791079ec54f20",
+    "name": "function 1",
+    "func": "let topicParts = msg.topic.split(\"/\"); // Divide el tópico para extraer la MAC\nlet mac = topicParts[1]; // Obtiene la MAC del dispositivo desde el tópico\nlet deviceId = msg.payload.device_id; // Obtiene el device_id del mensaje JSON\nlet rfid = msg.payload.rfid; // Obtiene el RFID del mensaje JSON\nlet sessionStatus = msg.payload.session_status; // Obtiene el estado de la sesión (start o end)\n\n// Validación de campos\nif (!sessionStatus || !rfid || !deviceId) {\n    node.error(\"Faltan campos obligatorios: rfid, device_id o session_status\");\n    return null;\n}\n\n// Construcción del payload para la API\nmsg.payload = {\n    rfid_tag: rfid,           // Identificador del usuario\n    machine_id: deviceId,     // Identificador de la máquina\n    session_status: sessionStatus // Estado de la sesión (start o end)\n};\n\n// Configurar la URL y método (solo POST es necesario)\nmsg.method = \"POST\";\nmsg.url = \"http://host.docker.internal:3000/sessions/\";\n\n// Configurar los encabezados HTTP\nmsg.headers = {\n    \"Content-Type\": \"application/json\" // Indica que el cuerpo es un JSON\n};\n\nreturn msg;\n",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 620,
+    "y": 140,
+    "wires": [["f9e62ba90c1ca003", "89dd6c6055a9ad35"]]
+  },
+  {
+    "id": "f9e62ba90c1ca003",
+    "type": "debug",
+    "z": "bb9791079ec54f20",
+    "name": "debug 1",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 860,
+    "y": 140,
+    "wires": []
+  },
+  {
+    "id": "89dd6c6055a9ad35",
+    "type": "http request",
+    "z": "bb9791079ec54f20",
+    "name": "",
+    "method": "use",
+    "ret": "txt",
+    "paytoqs": "ignore",
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 870,
+    "y": 240,
+    "wires": [["263004cea7460c94"]]
+  },
+  {
+    "id": "263004cea7460c94",
+    "type": "debug",
+    "z": "bb9791079ec54f20",
+    "name": "debug 2",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1110,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "b05fa8d517d49598",
+    "type": "ui_button",
+    "z": "bb9791079ec54f20",
+    "name": "nodo juanan (D8)",
+    "group": "e76336306f89b034",
+    "order": 0,
+    "width": "0",
+    "height": "0",
+    "passthru": false,
+    "label": "nodo juanan (D8)",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "",
+    "payload": "sendConfig",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "x": 430,
+    "y": 520,
+    "wires": [["1d230b693ad3798f"]]
+  },
+  {
+    "id": "1d230b693ad3798f",
+    "type": "function",
+    "z": "bb9791079ec54f20",
+    "name": "function 2",
+    "func": "msg.topic = \"devices/D8:BF:C0:10:26:DE/config\";\nmsg.payload = {\n    \"name\": \"MCU1\",\n    \"id\": \"1\",\n    \"machine\": \"Treadmill\"\n};\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 620,
+    "y": 480,
+    "wires": [["9961ad007c9a035d", "ae03f08b46d30769"]]
+  },
+  {
+    "id": "9961ad007c9a035d",
+    "type": "mqtt out",
+    "z": "bb9791079ec54f20",
+    "name": "",
+    "topic": "",
+    "qos": "",
+    "retain": "",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "86591f1206bc5fb2",
+    "x": 850,
+    "y": 500,
+    "wires": []
+  },
+  {
+    "id": "ae03f08b46d30769",
+    "type": "debug",
+    "z": "bb9791079ec54f20",
+    "name": "debug 3",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 860,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "1153eb43a52622c0",
+    "type": "ui_button",
+    "z": "bb9791079ec54f20",
+    "name": "",
+    "group": "7ec8f56b79eb6555",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "passthru": false,
+    "label": "Juan y Treadmill",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "",
+    "payload": "",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "x": 420,
+    "y": 660,
+    "wires": [["def30411d0b327c1"]]
+  },
+  {
+    "id": "def30411d0b327c1",
+    "type": "http request",
+    "z": "bb9791079ec54f20",
+    "name": "",
+    "method": "GET",
+    "ret": "txt",
+    "paytoqs": "ignore",
+    "url": "http://host.docker.internal:3000/sessions/average?rfid_tag=845ADC79&machine_id=1",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 710,
+    "y": 700,
+    "wires": [["c79ede12412f15ec", "41b54c6ece230f55"]]
+  },
+  {
+    "id": "c79ede12412f15ec",
+    "type": "function",
+    "z": "bb9791079ec54f20",
+    "name": "function 3",
+    "func": "// Asegurarse de que el payload es un objeto JSON\nif (typeof msg.payload === \"string\") {\n    try {\n        msg.payload = JSON.parse(msg.payload);\n    } catch (error) {\n        msg.payload = \"Error: No se pudo procesar la respuesta del servidor.\";\n        return msg;\n    }\n}\n\n// Verificar si la respuesta es un éxito\nif (msg.payload.status === \"success\") {\n    const averageTimeSeconds = parseFloat(msg.payload.average_time_seconds);\n    const averageTimeMinutes = (averageTimeSeconds / 60).toFixed(2);\n\n    msg.payload = `Tiempo promedio de uso: ${averageTimeMinutes} minutos`;\n} else {\n    msg.payload = \"Error: No se pudo obtener el tiempo promedio.\";\n}\nreturn msg;\n",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 940,
+    "y": 740,
+    "wires": [["357b7b6d3f053ebf", "64cf27576fbddb68"]]
+  },
+  {
+    "id": "357b7b6d3f053ebf",
+    "type": "ui_text",
+    "z": "bb9791079ec54f20",
+    "group": "7ec8f56b79eb6555",
+    "order": 1,
+    "width": 0,
+    "height": 0,
+    "name": "",
+    "label": "Tiempo medio de Juan",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "className": "",
+    "style": false,
+    "font": "",
+    "fontSize": 16,
+    "color": "#000000",
+    "x": 1200,
+    "y": 760,
+    "wires": []
+  },
+  {
+    "id": "41b54c6ece230f55",
+    "type": "debug",
+    "z": "bb9791079ec54f20",
+    "name": "debug 4",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 910,
+    "y": 660,
+    "wires": []
+  },
+  {
+    "id": "64cf27576fbddb68",
+    "type": "debug",
+    "z": "bb9791079ec54f20",
+    "name": "debug 5",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1130,
+    "y": 700,
+    "wires": []
+  }
 ]

@@ -22,14 +22,15 @@ app.get("/", (req, res) => {
 });
 
 // Probar conexión antes de levantar el servidor
-pool.query("SELECT 1")
+pool
+  .query("SELECT 1")
   .then(() => {
     console.log("Base de datos conectada. Iniciando servidor...");
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en http://localhost:${PORT}`);
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.error("No se pudo conectar a la base de datos:", err.message);
     process.exit(1);
   });

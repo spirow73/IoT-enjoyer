@@ -11,27 +11,32 @@ void readDataFromCard();
 
 MFRC522 mfrc522(SS_PIN, RST_PIN); // Crear instancia de MFRC522
 
-void setup() {
+void setup()
+{
   Serial.begin(115200); // Iniciar comunicación serial
-  SPI.begin();        // Iniciar bus SPI
-  mfrc522.PCD_Init(); // Iniciar MFRC522
+  SPI.begin();          // Iniciar bus SPI
+  mfrc522.PCD_Init();   // Iniciar MFRC522
   Serial.println("Coloca una tarjeta RFID cerca del lector...");
 }
 
-void loop() {
+void loop()
+{
   // Detectar nueva tarjeta
-  if (!mfrc522.PICC_IsNewCardPresent()) {
+  if (!mfrc522.PICC_IsNewCardPresent())
+  {
     return;
   }
 
   // Seleccionar tarjeta
-  if (!mfrc522.PICC_ReadCardSerial()) {
+  if (!mfrc522.PICC_ReadCardSerial())
+  {
     return;
   }
 
   // Mostrar UID de la tarjeta
   Serial.print("UID de la tarjeta: ");
-  for (byte i = 0; i < mfrc522.uid.size; i++) {
+  for (byte i = 0; i < mfrc522.uid.size; i++)
+  {
     Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
     Serial.print(mfrc522.uid.uidByte[i], HEX);
   }
@@ -41,22 +46,25 @@ void loop() {
   readDataFromCard();
 
   // Detener comunicación con la tarjeta
-  mfrc522.PICC_HaltA();         // Finaliza la comunicación con la tarjeta
-  mfrc522.PCD_StopCrypto1();    // Detener el uso de claves y reiniciar lector
+  mfrc522.PICC_HaltA();      // Finaliza la comunicación con la tarjeta
+  mfrc522.PCD_StopCrypto1(); // Detener el uso de claves y reiniciar lector
 }
 
 // Función para escribir datos en la tarjeta
-void writeDataToCard() {
-  byte block = 4; // Número del bloque donde queremos escribir
+void writeDataToCard()
+{
+  byte block = 4;                    // Número del bloque donde queremos escribir
   byte dataBlock[] = {"Hola Mundo"}; // Datos a escribir (16 bytes máximo)
   MFRC522::StatusCode status;
 
   // Autenticar el bloque
   MFRC522::MIFARE_Key key;
-  for (byte i = 0; i < 6; i++) key.keyByte[i] = 0xFF;
+  for (byte i = 0; i < 6; i++)
+    key.keyByte[i] = 0xFF;
 
   status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
-  if (status != MFRC522::STATUS_OK) {
+  if (status != MFRC522::STATUS_OK)
+  {
     Serial.print("Error en la autenticación: ");
     Serial.println(mfrc522.GetStatusCodeName(status));
     return;
@@ -64,27 +72,33 @@ void writeDataToCard() {
 
   // Escribir datos
   status = mfrc522.MIFARE_Write(block, dataBlock, 16);
-  if (status != MFRC522::STATUS_OK) {
+  if (status != MFRC522::STATUS_OK)
+  {
     Serial.print("Error al escribir: ");
     Serial.println(mfrc522.GetStatusCodeName(status));
-  } else {
+  }
+  else
+  {
     Serial.println("Datos escritos con éxito.");
   }
 }
 
 // Función para leer datos de la tarjeta
-void readDataFromCard() {
-  byte block = 4; // Número del bloque que queremos leer
+void readDataFromCard()
+{
+  byte block = 4;  // Número del bloque que queremos leer
   byte buffer[18]; // Buffer para los datos leídos (16 bytes + 2 bytes CRC)
   byte size = sizeof(buffer);
   MFRC522::StatusCode status;
 
   // Autenticar el bloque
   MFRC522::MIFARE_Key key;
-  for (byte i = 0; i < 6; i++) key.keyByte[i] = 0xFF;
+  for (byte i = 0; i < 6; i++)
+    key.keyByte[i] = 0xFF;
 
   status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
-  if (status != MFRC522::STATUS_OK) {
+  if (status != MFRC522::STATUS_OK)
+  {
     Serial.print("Error en la autenticación: ");
     Serial.println(mfrc522.GetStatusCodeName(status));
     return;
@@ -92,12 +106,16 @@ void readDataFromCard() {
 
   // Leer datos
   status = mfrc522.MIFARE_Read(block, buffer, &size);
-  if (status != MFRC522::STATUS_OK) {
+  if (status != MFRC522::STATUS_OK)
+  {
     Serial.print("Error al leer: ");
     Serial.println(mfrc522.GetStatusCodeName(status));
-  } else {
+  }
+  else
+  {
     Serial.print("Datos leídos: ");
-    for (byte i = 0; i < 16; i++) {
+    for (byte i = 0; i < 16; i++)
+    {
       Serial.write(buffer[i]); // Mostrar datos como caracteres
     }
     Serial.println();
