@@ -59,6 +59,8 @@ void conectarWiFi()
     }
   }
   Serial.println("\nWiFi conectado.");
+
+  // Una vez conectado a la wifi, nos conectamos al thingspeak
   ThingSpeak.begin(client);
   estadoActual = MONITOREANDO;
 }
@@ -71,7 +73,7 @@ void apagarLED()
 }
 
 // Interrupción del PIR
-void ICACHE_RAM_ATTR detectarMovimiento()
+void IRAM_ATTR detectarMovimiento()
 {
   movimientoDetectado = true;
 }

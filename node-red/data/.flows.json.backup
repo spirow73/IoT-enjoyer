@@ -277,7 +277,7 @@
         "id": "b05fa8d517d49598",
         "type": "ui_button",
         "z": "bb9791079ec54f20",
-        "name": "D8:BF:C0:10:26:DE",
+        "name": "nodo juanan (D8)",
         "group": "e76336306f89b034",
         "order": 0,
         "width": "0",
@@ -293,7 +293,7 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 440,
+        "x": 430,
         "y": 520,
         "wires": [
             [
@@ -377,7 +377,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 420,
-        "y": 660,
+        "y": 1080,
         "wires": [
             [
                 "def30411d0b327c1"
@@ -401,7 +401,7 @@
         "senderr": false,
         "headers": [],
         "x": 710,
-        "y": 700,
+        "y": 1120,
         "wires": [
             [
                 "c79ede12412f15ec",
@@ -422,7 +422,7 @@
         "finalize": "",
         "libs": [],
         "x": 940,
-        "y": 740,
+        "y": 1160,
         "wires": [
             [
                 "357b7b6d3f053ebf",
@@ -448,7 +448,7 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 1200,
-        "y": 760,
+        "y": 1180,
         "wires": []
     },
     {
@@ -464,7 +464,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 910,
-        "y": 660,
+        "y": 1080,
         "wires": []
     },
     {
@@ -480,6 +480,89 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1130,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "032095bd209d2b0a",
+        "type": "ui_button",
+        "z": "bb9791079ec54f20",
+        "name": "Nodo Juan (EC)",
+        "group": "e76336306f89b034",
+        "order": 0,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "nodo juan (EC)",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "sendConfig",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 420,
+        "y": 660,
+        "wires": [
+            [
+                "22c85a1270e06681"
+            ]
+        ]
+    },
+    {
+        "id": "22c85a1270e06681",
+        "type": "function",
+        "z": "bb9791079ec54f20",
+        "name": "function 4",
+        "func": "msg.topic = \"devices/D8:BF:C0:10:26:DE/config\";\nmsg.payload = {\n    \"name\": \"MCU_JUAN\",\n    \"id\": \"2\",\n    \"machine\": \"Bench Press\"\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 620,
+        "wires": [
+            [
+                "47cf9a374b825676",
+                "e2c55f022f2b5ec5"
+            ]
+        ]
+    },
+    {
+        "id": "47cf9a374b825676",
+        "type": "mqtt out",
+        "z": "bb9791079ec54f20",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "86591f1206bc5fb2",
+        "x": 850,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "e2c55f022f2b5ec5",
+        "type": "debug",
+        "z": "bb9791079ec54f20",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
         "y": 700,
         "wires": []
     }
