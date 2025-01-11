@@ -3,12 +3,13 @@
 #include <MFRC522.h>
 #include <ThingSpeak.h>
 #include <config.h>
+#include <Ticker.h>
 
 // Pines del NodeMCU para conectar el MFRC522 y el buzzer
 #define RST_PIN D3   // Pin RST conectado al D3
 #define SS_PIN D4    // Pin SDA conectado al D4
 #define BUZZER_PIN D8 // Pin para el buzzer
-#define TONE_FREQUENCY 235      // Frecuencia del tono del buzzer (Hz)
+#define TONE_FREQUENCY 1000      // Frecuencia del tono del buzzer (Hz)
 #define BEEP_DURATION 100       // Duración de cada pitido en milisegundos
 #define BEEP_PAUSE 100          // Pausa entre pitidos consecutivos en milisegundos
 
@@ -17,6 +18,16 @@
 
 // Configuración del array circular
 #define MAX_UIDS 20
+
+#define LDR_THRESHOLD 20
+
+Ticker tickerLDR;      // Ticker para la lectura del LDR cada 10 ms
+Ticker tickerSerial;   // Ticker para enviar las lecturas al puerto serie cada 1 segundo
+const int ledPin = D1; // Pin del LED integrado (GPIO2 en NodeMCU)
+const int ldrPin = A0; // Pin donde está conectado el LDR
+int pwmValue = 0;      // Variable para el valor PWM
+int ldrValue = 0;      // Variable global para almacenar la lectura del LDR
+int init_threshold = 0;     // Umbral calculado al inicio
 
 const char* ssid = WIFI_SSID;
 const char *password = WIFI_PASSWORD;
@@ -49,7 +60,8 @@ void doubleBeep();
 void conectarWiFi();
 void enviarDatos(int data);
 void removeUID(String uid);
-
+void readLDRandAdjustLED(); // Función que se ejecuta cada 10 ms para leer el LDR y ajustar el LED
+void sendLDRValueToSerial();
 
 void setup() {
   // Configuración del Serial
@@ -67,6 +79,14 @@ void setup() {
 
   // Inicializar WiFi
   conectarWiFi();
+
+  // Leer el valor inicial del LDR para calcular el umbral
+  init_threshold = analogRead(ldrPin) + LDR_THRESHOLD; // Agregar 20 al umbral inicial
+  Serial.print("Umbral inicial calculado (con margen)");
+  Serial.println(init_threshold);
+
+  tickerLDR.attach_ms(10, readLDRandAdjustLED); // Llamar a la función cada 10 ms
+  // tickerSerial.attach(1, sendLDRValueToSerial); // Llamar a la función cada 1 segundo
 
   Serial.println("Sistema iniciado. Escaneando...");
 }
@@ -149,7 +169,6 @@ void removeUID(String uid) {
   }
 }
 
-
 // Realiza un solo pitido
 void singleBeep() {
   tone(BUZZER_PIN, TONE_FREQUENCY, BEEP_DURATION);
@@ -166,7 +185,6 @@ void doubleBeep() {
     delay(BEEP_PAUSE);
   }
 }
-
 
 // Función: Conectar a WiFi
 void conectarWiFi()
@@ -189,7 +207,6 @@ void conectarWiFi()
   // Una vez conectado a la wifi, nos conectamos al thingspeak
   ThingSpeak.begin(client);
 }
-
 
 // Función: Enviar datos a ThingSpeak
 void enviarDatos(int data)
@@ -214,4 +231,22 @@ void enviarDatos(int data)
   {
     Serial.println("Error enviando datos a ThingSpeak. Código: " + String(statusCode));
   }
+}
+
+// Función que se ejecuta cada 10 ms para leer el LDR y ajustar el LED
+void readLDRandAdjustLED() {
+  ldrValue = analogRead(ldrPin); // Leer valor del LDR (0-1023)
+  if (ldrValue > init_threshold) {
+    pwmValue = map(ldrValue, init_threshold, 1023, 0, 255); // Mapear valor del LDR a PWM (ajustado por umbral)
+    analogWrite(ledPin, pwmValue);                     // Ajustar brillo del LED con PWM
+  } else {
+    analogWrite(ledPin, 0); // Apagar el LED si el valor está por debajo del umbral
+  }
+}
+
+void sendLDRValueToSerial() {
+  Serial.print("Valor LDR: ");
+  Serial.print(ldrValue);
+  Serial.print(" | Umbral (con margen): ");
+  Serial.println(init_threshold); // Enviar el valor del umbral también
 }
