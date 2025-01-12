@@ -17,7 +17,7 @@ Este sistema IoT transforma los gimnasios tradicionales en espacios inteligentes
    - Lectores RFID para identificar usuarios en las máquinas y al entrar/salir del gimnasio.
 2. **Visualización y Control**:
    - Dashboard interactivo en Node-RED para monitoreo en tiempo real.
-   - Visualización de datos históricos en ThingSpeak.
+   - Visualización de datos históricos en ThingSpeak (https://thingspeak.mathworks.com/channels/2806127).
 3. **Eficiencia Energética**:
    - Iluminación ajustable basada en un sensor LDR y controlada por un LED RGB.
 
@@ -32,15 +32,15 @@ El sistema está compuesto por tres nodos IoT:
 3. **Nodo 3: Control de Iluminación**:
    - Optimiza la iluminación del gimnasio automáticamente.
 
-Los nodos se comunican utilizando **MQTT**, mientras que los datos son visualizados y gestionados mediante **Node-RED** y **ThingSpeak**.
+Los nodos se comunican utilizando **MQTT**, mientras que los datos son visualizados y gestionados mediante **Node-RED** y [**ThingSpeak**](https://thingspeak.mathworks.com/channels/2806127).
 
 ## 👥 **Equipo de Desarrollo**
 
 Este proyecto ha sido desarrollado por un equipo apasionado y comprometido:
 
-- **Juan Antonio Moya** - Especialista en hardware y configuración de nodos.
-- **Juan Pérez** - Líder de desarrollo y gestión de la comunicación MQTT.
-- **Jorge Jimenez** - Responsable de integración con Node-RED y análisis en ThingSpeak.
+- **Juan Antonio Moya**
+- **Juan Pérez**
+- **Jorge Jimenez**
 
 ## 🛒 **¿Por qué Elegir Nuestro Sistema?**
 
@@ -62,13 +62,8 @@ Este proyecto ha sido desarrollado por un equipo apasionado y comprometido:
 - **Software**:
   - Mosquitto MQTT Broker
   - Node-RED para flujos de datos
-  - ThingSpeak para análisis y reportes
+  - [ThingSpeak](https://thingspeak.mathworks.com/channels/2806127) para análisis y reportes 
   - Arduino IDE o PlatformIO para programación
-
-## 📬 **Contacto**
-
-¿Interesado en implementar esta solución en tu gimnasio? ¡Contáctanos!  
-Correo: equipoiotgimnasios@ejemplo.com
 
 ---
 
